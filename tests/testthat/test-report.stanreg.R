@@ -3,7 +3,7 @@ if (require("testthat") && require("rstanarm")) {
   model <- stan_glm(mpg ~ qsec + wt, data = mtcars, refresh = 0, iter = 300)
 
   test_that("model-stanreg", {
-    r <- report(model)
+    r <- report(model, centrality = "mean")
     expect_s3_class(summary(r), "character")
     expect_s3_class(as.data.frame(r), "data.frame")
 
@@ -15,8 +15,11 @@ if (require("testthat") && require("rstanarm")) {
       )
     )
     expect_equal(
-      as.data.frame(r)$Median,
-      c(19.906865, 0.930295, -5.119548, rep(NA, 7)),
+      as.data.frame(r)$Mean,
+      c(
+        19.6150397292409, 0.937896549338215, -5.04660975597389, NA,
+        NA, NA, NA, NA, NA, NA
+      ),
       tolerance = 1e-1
     )
     expect_equal(

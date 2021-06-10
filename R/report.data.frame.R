@@ -54,7 +54,7 @@ report.data.frame <- function(x,
                               ...) {
 
   # remove list columns
-  x <- x[, sapply(x, class) != "list"]
+  x <- x[, sapply(x, Negate(inherits), what = "list")]
 
   table <-
     report_table(
@@ -246,8 +246,8 @@ report_text.data.frame <- function(x,
   )
 
   # Concatenate text
-  text_full <- paste0("The data contains ", nrow(x), " observations of the following variables:\n", as.character(params))
-  text <- paste0("The data contains ", nrow(x), " observations of the following variables:\n", as.character(summary(params)))
+  text_full <- paste0("The data contains ", nrow(x), " observations of the following ", ncol(x), " variables:\n", as.character(params))
+  text <- paste0("The data contains ", nrow(x), " observations of the following ", ncol(x), " variables:\n", as.character(summary(params)))
 
   as.report_text(text_full, summary = text)
 }
@@ -311,7 +311,9 @@ report_statistics.data.frame <- function(x,
     nrow(ungrouped_x),
     " observations, grouped by ",
     groups,
-    ", of the following variables:"
+    ", of the following ",
+    ncol(ungrouped_x),
+    " variables:"
   )
 
   for (group in names(dfs)) {
@@ -358,10 +360,12 @@ report_table.grouped_df <- function(x,
     )
 
     current_table_full$Group <- group
-    table_full <- rbind(table_full, current_table_full)
+    # table_full <- rbind(table_full, current_table_full)
+    table_full <- merge(table_full, current_table_full, all = TRUE, sort = FALSE)
     current_table <- summary(current_table_full)
     current_table$Group <- group
-    table <- rbind(table, current_table)
+    # table <- rbind(table, current_table)
+    table <- merge(table, current_table, all = TRUE, sort = FALSE)
   }
 
   table <- data_reorder(table, "Group")

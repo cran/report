@@ -28,9 +28,6 @@ report.anova <- report.aov
 report.aovlist <- report.aov
 
 
-
-
-
 # report_effectsize -------------------------------------------------------
 
 
@@ -102,10 +99,7 @@ report_effectsize.anova <- report_effectsize.aov
 #' @export
 report_effectsize.aovlist <- report_effectsize.aov
 
-
-
 # report_table ------------------------------------------------------------
-
 
 #' @rdname report.aov
 #' @importFrom parameters model_parameters
@@ -118,6 +112,7 @@ report_table.aov <- function(x, ...) {
 
   if ("Group" %in% names(params)) {
     effsize_table$Group <- "Within"
+    params <- params[params$Group == "Within", ]
     table_full <- merge(params, effsize_table, all = TRUE)
     table_full <- table_full[order(
       match(
@@ -131,11 +126,17 @@ report_table.aov <- function(x, ...) {
       match(table_full$Parameter, params$Parameter)
     ), ]
   }
+
   row.names(table_full) <- NULL
 
   table <- data_remove(table_full, data_findcols(table_full, ends_with = c("_CI_low|_CI_high")))
 
-  as.report_table(table_full, summary = table, ci = attributes(effsize)$ci, effsize = effsize)
+  as.report_table(
+    table_full,
+    summary = table,
+    ci = attributes(effsize)$ci,
+    effsize = effsize
+  )
 }
 
 #' @export
@@ -145,12 +146,7 @@ report_table.anova <- report_table.aov
 report_table.aovlist <- report_table.aov
 
 
-
-
-
-
 # report_statistics ------------------------------------------------------------
-
 
 #' @rdname report.aov
 #' @export
@@ -227,7 +223,12 @@ report_parameters.aov <- function(x, ...) {
   params <- table[table$Parameter != "Residuals", ]
 
   # Text parameters
-  text <- sapply(params$Parameter, .format_parameters_aov, simplify = TRUE, USE.NAMES = FALSE)
+  text <- sapply(
+    params$Parameter,
+    .format_parameters_aov,
+    simplify = TRUE,
+    USE.NAMES = FALSE
+  )
 
   # Significance
   text <- paste0(
@@ -242,7 +243,13 @@ report_parameters.aov <- function(x, ...) {
   text_full <- paste0(text, stats, ")")
   text <- paste0(text, summary(stats), ")")
 
-  as.report_parameters(text_full, summary = text, table = table, effectsize = effsize, ...)
+  as.report_parameters(
+    text_full,
+    summary = text,
+    table = table,
+    effectsize = effsize,
+    ...
+  )
 }
 
 #' @export

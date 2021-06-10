@@ -14,6 +14,7 @@
 #' @return An object of class \code{\link{report_performance}}.
 #'
 #' @examples
+#' \donttest{
 #' library(report)
 #'
 #' # GLMs
@@ -26,7 +27,6 @@
 #'   report_performance(model)
 #' }
 #'
-#' \donttest{
 #' # Bayesian models
 #' if (require("rstanarm")) {
 #'   model <- stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600)

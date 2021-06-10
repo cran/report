@@ -11,7 +11,6 @@
 #'
 #' @examples
 #' library(report)
-#'
 #' \donttest{
 #' # Structural Equation Models (SEM)
 #' if (require("lavaan")) {
@@ -35,8 +34,6 @@
 report.lavaan <- function(x, ...) {
   print("Support for lavaan not fully implemented yet :(")
 }
-
-
 
 
 
@@ -79,10 +76,6 @@ report_table.lavaan <- function(x, ...) {
 
   out
 }
-
-
-
-
 
 
 

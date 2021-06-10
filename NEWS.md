@@ -1,3 +1,7 @@
-# report 0.1.0
+# report 0.3.0.9000 (development)
 
-* Added a `NEWS.md` file to track changes to the package.
+* Added support for models of class `ivreg` (*ivreg*).
+
+# report 0.3.0
+
+* Initial release of the package.

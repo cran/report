@@ -10,6 +10,7 @@
 #' @return A \code{character} string.
 #'
 #' @examples
+#' \donttest{
 #' library(report)
 #'
 #' # h-tests
@@ -23,7 +24,6 @@
 #' report_model(lm(Sepal.Length ~ Petal.Length * Species, data = iris))
 #' report_model(glm(vs ~ disp, data = mtcars, family = "binomial"))
 #'
-#' \donttest{
 #' # Mixed models
 #' if (require("lme4")) {
 #'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)

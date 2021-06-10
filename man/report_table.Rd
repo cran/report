@@ -20,6 +20,7 @@ Creates tables to describe different objects (see list of supported objects
 in \code{\link{report}}).
 }
 \examples{
+\donttest{
 library(report)
 
 # Miscellaneous
@@ -44,7 +45,6 @@ report_table(aov(Sepal.Length ~ Species, data = iris))
 report_table(lm(Sepal.Length ~ Petal.Length * Species, data = iris))
 report_table(glm(vs ~ disp, data = mtcars, family = "binomial"))
 
-\donttest{
 # Mixed models
 if (require("lme4")) {
   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)

@@ -1,6 +1,7 @@
 #' Report intercept
 #'
-#' Reports intercept of regression models (see list of supported objects in \code{\link{report}}).
+#' Reports intercept of regression models (see list of supported objects in
+#' \code{\link{report}}).
 #'
 #' @inheritParams report
 #' @inheritParams report_table
@@ -10,13 +11,13 @@
 #' @return An object of class \code{\link{report_intercept}}.
 #'
 #' @examples
+#' \donttest{
 #' library(report)
 #'
 #' # GLMs
 #' report_intercept(lm(Sepal.Length ~ Species, data = iris))
 #' report_intercept(glm(vs ~ disp, data = mtcars, family = "binomial"))
 #'
-#' \donttest{
 #' # Mixed models
 #' if (require("lme4")) {
 #'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
@@ -30,13 +31,13 @@
 #' }
 #' }
 #' @export
+
 report_intercept <- function(x, ...) {
   UseMethod("report_intercept")
 }
 
 
 # METHODS -----------------------------------------------------------------
-
 
 #' @rdname as.report
 #' @export
@@ -66,11 +67,7 @@ print.report_intercept <- function(x, ...) {
 }
 
 
-
 # Utils -------------------------------------------------------------------
-
-
-
 
 #' @importFrom insight is_nullmodel get_data find_variables
 #' @keywords internal
@@ -88,8 +85,7 @@ print.report_intercept <- function(x, ...) {
     if (is.numeric(data[[col]])) {
       text <- c(text, paste0(col, " = 0"))
     } else if (is.character(data[[col]])) {
-      data[col] <- as.character(data[col])
-      text <- c(text, paste0(col, " = ", levels(data[[col]])[1]))
+      text <- c(text, paste0(col, " = ", levels(as.factor(data[[col]]))[1]))
     } else if (is.factor(data[[col]])) {
       text <- c(text, paste0(col, " = ", levels(data[[col]])[.find_reference_level(data[[col]])]))
     } else {
