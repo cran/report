@@ -1,7 +1,7 @@
 #' Convenient formatting of text components
 #'
 #' @inheritParams report
-#' @param what The name of the item returned by \code{insight::find_formula}.
+#' @param what The name of the item returned by `insight::find_formula`.
 #'
 #' @return A character string.
 #'
@@ -14,7 +14,6 @@
 #'   format_formula(model)
 #'   format_formula(model, "random")
 #' }
-#' @importFrom insight find_algorithm
 #' @export
 format_formula <- function(x, what = "conditional") {
   f <- .safe_deparse(insight::find_formula(x)[[what]])

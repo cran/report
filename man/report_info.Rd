@@ -13,18 +13,17 @@ objects above).}
 \item{...}{Arguments passed to or from other methods.}
 }
 \value{
-An object of class \code{\link{report_info}}.
+An object of class \code{\link[=report_info]{report_info()}}.
 }
 \description{
 Reports additional information relevant to the report (see list of supported
-objects in \code{\link{report}}).
+objects in \code{\link[=report]{report()}}).
 }
 \examples{
 library(report)
 
 # h-tests
 report_info(t.test(iris$Sepal.Width, iris$Sepal.Length))
-report_info(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 
 # ANOVAs
 report_info(aov(Sepal.Length ~ Species, data = iris))

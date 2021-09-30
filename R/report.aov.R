@@ -2,7 +2,7 @@
 #'
 #' Create reports for ANOVA models.
 #'
-#' @param x Object of class \code{aov}, \code{anova} or \code{aovlist}.
+#' @param x Object of class `aov`, `anova` or `aovlist`.
 #' @inheritParams report
 #' @inheritParams report.htest
 #' @inherit report return seealso
@@ -17,7 +17,7 @@
 #' summary(r)
 #' as.data.frame(r)
 #' summary(as.data.frame(r))
-#' @return An object of class \code{\link{report}}.
+#' @return An object of class [report()].
 #' @export
 report.aov <- report.htest
 
@@ -32,9 +32,6 @@ report.aovlist <- report.aov
 
 
 #' @rdname report.aov
-#' @importFrom effectsize effectsize interpret_eta_squared is_effectsize_name
-#' @importFrom parameters model_parameters
-#' @importFrom insight model_info
 #' @export
 report_effectsize.aov <- function(x, ...) {
   table <- effectsize::effectsize(x, ...)
@@ -102,8 +99,6 @@ report_effectsize.aovlist <- report_effectsize.aov
 # report_table ------------------------------------------------------------
 
 #' @rdname report.aov
-#' @importFrom parameters model_parameters
-#' @importFrom insight model_info
 #' @export
 report_table.aov <- function(x, ...) {
   effsize <- report_effectsize(x, ...)

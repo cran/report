@@ -16,11 +16,11 @@ will run it.}
 \item{...}{Arguments passed to or from other methods.}
 }
 \value{
-An object of class \code{\link{report_statistics}}.
+An object of class \code{\link[=report_statistics]{report_statistics()}}.
 }
 \description{
 Creates a list containing a description of the parameters' values of R
-objects (see list of supported objects in \code{\link{report}}). Useful to
+objects (see list of supported objects in \code{\link[=report]{report()}}). Useful to
 insert in parentheses in plots or reports.
 }
 \examples{
@@ -35,7 +35,6 @@ report_statistics(iris)
 
 # h-tests
 report_statistics(t.test(iris$Sepal.Width, iris$Sepal.Length))
-report_statistics(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 
 # ANOVA
 report_statistics(aov(Sepal.Length ~ Species, data = iris))

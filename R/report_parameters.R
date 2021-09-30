@@ -1,14 +1,14 @@
 #' Report the parameters of a model
 #'
 #' Creates a list containing a description of the parameters of R objects (see
-#' list of supported objects in \code{\link{report}}).
+#' list of supported objects in [report()]).
 #'
 #' @inheritParams report
 #' @inheritParams report_table
 #' @inheritParams report_text
 #' @inheritParams as.report
 #'
-#' @return A \code{vector}.
+#' @return A `vector`.
 #'
 #' @examples
 #' \donttest{
@@ -27,7 +27,6 @@
 #'
 #' # h-tests
 #' report_parameters(t.test(iris$Sepal.Width, iris$Sepal.Length))
-#' report_parameters(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 #'
 #' # ANOVA
 #' report_parameters(aov(Sepal.Length ~ Species, data = iris))
@@ -123,8 +122,8 @@ print.report_parameters <- function(x, ...) {
     # Interaction
     if (grepl(" * ", names[i], fixed = TRUE)) {
       parts <- unlist(strsplit(names[i], " * ", fixed = TRUE))
-      basis <- paste0(head(parts, -1), collapse = " * ")
-      names[i] <- paste0("The interaction effect of ", tail(parts, 1), " on ", basis)
+      basis <- paste0(utils::head(parts, -1), collapse = " * ")
+      names[i] <- paste0("The interaction effect of ", utils::tail(parts, 1), " on ", basis)
 
       # Intercept
     } else if (names[i] == "(Intercept)") {
@@ -156,7 +155,6 @@ print.report_parameters <- function(x, ...) {
 
 
 
-#' @importFrom effectsize interpret_rhat interpret_ess
 #' @keywords internal
 .parameters_diagnostic_bayesian <- function(diagnostic, only_when_insufficient = FALSE, ...) {
 

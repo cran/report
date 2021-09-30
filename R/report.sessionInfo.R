@@ -2,11 +2,11 @@
 #'
 #' @inheritParams report
 #' @inheritParams as.report_parameters
-#' @param session A \link[utils:sessionInfo]{sessionInfo} object.
+#' @param session A [sessionInfo][utils::sessionInfo] object.
 #' @param include_R Include R in the citations.
 #'
 #' @return \itemize{
-#'   \item{For \code{report_packages}, a data frame of class with information on
+#'   \item{For `report_packages`, a data frame of class with information on
 #'   package name, version and citation.}
 #' }
 #'
@@ -26,8 +26,7 @@
 #' report_packages(include_R = FALSE)
 #' cite_packages(prefix = "> ")
 #' report_system()
-#' @importFrom utils packageVersion sessionInfo
-#' @return An object of class \code{\link{report}}.
+#' @return An object of class [report()].
 #' @export
 report.sessionInfo <- function(x, ...) {
   table <- report_table(x, ...)
@@ -41,7 +40,6 @@ report.sessionInfo <- function(x, ...) {
 # Aliases -----------------------------------------------------------------
 
 
-#' @importFrom utils sessionInfo
 #' @rdname report.sessionInfo
 #' @export
 report_packages <- function(session = NULL, include_R = TRUE, ...) {
@@ -50,7 +48,6 @@ report_packages <- function(session = NULL, include_R = TRUE, ...) {
 }
 
 
-#' @importFrom utils sessionInfo
 #' @rdname report.sessionInfo
 #' @export
 cite_packages <- function(session = NULL, include_R = TRUE, ...) {
@@ -73,7 +70,6 @@ cite_packages <- function(session = NULL, include_R = TRUE, ...) {
 # report_system --------------------------------------------------------------
 
 
-#' @importFrom utils sessionInfo citation
 #' @rdname report.sessionInfo
 #' @export
 report_system <- function(session = NULL) {
@@ -110,7 +106,6 @@ report_system <- function(session = NULL) {
 
 # report_table ------------------------------------------------------------
 
-#' @importFrom utils citation packageVersion
 #' @export
 report_table.sessionInfo <- function(x, include_R = TRUE, ...) {
   pkgs <- x$otherPkgs

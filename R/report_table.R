@@ -1,11 +1,11 @@
 #' Report a descriptive table
 #'
 #' Creates tables to describe different objects (see list of supported objects
-#' in \code{\link{report}}).
+#' in [report()]).
 #'
 #' @inheritParams report
 #'
-#' @return An object of class \code{\link{report_table}}.
+#' @return An object of class [report_table()].
 #'
 #' @examples
 #' \donttest{
@@ -24,7 +24,6 @@
 #'
 #' # h-tests
 #' report_table(t.test(mpg ~ am, data = mtcars))
-#' report_table(cor.test(iris$Sepal.Length, iris$Sepal.Width))
 #'
 #' # ANOVAs
 #' report_table(aov(Sepal.Length ~ Species, data = iris))
@@ -72,7 +71,7 @@ as.report_table <- function(x, ...) {
 #' @export
 as.report_table.default <- function(x, summary = NULL, as_is = FALSE, ...) {
   if (as_is) {
-    class(x) <- unique(c(class(x)[1], "report_table", tail(class(x), -1)))
+    class(x) <- unique(c(class(x)[1], "report_table", utils::tail(class(x), -1)))
   } else {
     class(x) <- unique(c("report_table", class(x)))
   }
@@ -81,7 +80,7 @@ as.report_table.default <- function(x, summary = NULL, as_is = FALSE, ...) {
 
   if (!is.null(summary)) {
     if (as_is) {
-      class(summary) <- unique(c(class(summary)[1], "report_table", tail(class(summary), -1)))
+      class(summary) <- unique(c(class(summary)[1], "report_table", utils::tail(class(summary), -1)))
     } else {
       class(summary) <- unique(c("report_table", class(summary)))
     }
@@ -114,13 +113,11 @@ summary.report_table <- function(object, ...) {
 }
 
 
-#' @importFrom insight format_table
 #' @export
 format.report_table <- function(x, ...) {
   insight::format_table(x, ...)
 }
 
-#' @importFrom insight export_table
 #' @export
 print.report_table <- function(x, ...) {
   cat(insight::export_table(format(x, ...), ...))

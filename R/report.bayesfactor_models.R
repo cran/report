@@ -2,9 +2,9 @@
 #'
 #' Create reports of Bayes factors for model comparison.
 #'
-#' @param x Object of class \code{bayesfactor_inclusion}.
+#' @param x Object of class `bayesfactor_inclusion`.
 #' @param interpretation Effect size interpretation set of rules (see
-#'   \link[effectsize]{interpret_bf}).
+#'   [interpret_bf][effectsize::interpret_bf]).
 #' @inheritParams report
 #' @inheritParams effectsize::interpret_bf
 #' @inherit report return seealso
@@ -32,10 +32,7 @@
 #'   r
 #'   as.data.frame(r)
 #' }
-#' @importFrom effectsize interpret_bf
-#' @importFrom stats setNames
-#' @importFrom insight format_bf
-#' @return An object of class \code{\link{report}}.
+#' @return An object of class [report()].
 #' @export
 report.bayesfactor_models <- function(x,
                                       interpretation = "jeffreys1961",
@@ -223,9 +220,6 @@ report_text.bayesfactor_models <- function(x,
 # bayesfactor_inclusion ---------------------------------------------------
 
 #' @rdname report.bayesfactor_models
-#' @importFrom effectsize interpret_bf
-#' @importFrom insight format_value
-#' @importFrom stats setNames
 #' @export
 report.bayesfactor_inclusion <- function(x,
                                          interpretation = "jeffreys1961",

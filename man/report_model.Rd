@@ -19,7 +19,7 @@ will run it.}
 A \code{character} string.
 }
 \description{
-Reports the type of different R objects (see list of supported objects in \code{\link{report}}).
+Reports the type of different R objects (see list of supported objects in \code{\link[=report]{report()}}).
 }
 \examples{
 \donttest{
@@ -27,7 +27,6 @@ library(report)
 
 # h-tests
 report_model(t.test(iris$Sepal.Width, iris$Sepal.Length))
-report_model(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 
 # ANOVA
 report_model(aov(Sepal.Length ~ Species, data = iris))

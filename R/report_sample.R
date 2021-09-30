@@ -6,8 +6,8 @@
 #' @param group_by Character vector, indicating the column for possible grouping
 #'   of the descriptive table.
 #' @param centrality Character, indicates the statistics that should be
-#'   calculated for numeric variables. May be \code{"mean"} (for mean and
-#'   standard deviation) or \code{"median"} (for median and median absolute
+#'   calculated for numeric variables. May be `"mean"` (for mean and
+#'   standard deviation) or `"median"` (for median and median absolute
 #'   deviation) as summary.
 #' @param select Character vector, with column names that should be included in
 #'   the descriptive table.
@@ -15,12 +15,12 @@
 #'   from the descriptive table.
 #' @param weights Character vector, indicating the name of a potential
 #'   weight-variable. Reported descriptive statistics will be weighted by
-#'   \code{weight}.
-#' @param total Add a \code{Total} column.
+#'   `weight`.
+#' @param total Add a `Total` column.
 #' @param digits Number of decimals.
 #' @inheritParams report.data.frame
 #'
-#' @return A data frame of class \code{report_sample} with variable names and
+#' @return A data frame of class `report_sample` with variable names and
 #'   their related summary statistics.
 #'
 #' @examples
@@ -29,7 +29,6 @@
 #' report_sample(iris[, 1:4])
 #' report_sample(iris, select = c("Sepal.Length", "Petal.Length", "Species"))
 #' report_sample(iris, group_by = "Species")
-#' @importFrom stats median sd mad
 #' @export
 report_sample <- function(data,
                           group_by = NULL,
@@ -72,12 +71,19 @@ report_sample <- function(data,
     # just extract summary columns
     summaries <- do.call(cbind, lapply(result, function(i) i["Summary"]))
     colnames(summaries) <- cn
+    # generate data for total column, but make sure to remove missings
+    total_data <- data[!is.na(data[[group_by]]), unique(c(variables, group_by))]
     # bind all together, including total column
-    cbind(
+    final <- cbind(
       variable,
       summaries,
-      Total = .generate_descriptive_table(data[setdiff(variables, group_by)], centrality, weights, digits)[["Summary"]]
+      Total = .generate_descriptive_table(total_data[setdiff(variables, group_by)], centrality, weights, digits)[["Summary"]]
     )
+    # add N to column name
+    colnames(final)[ncol(final)] <- sprintf("%s (n=%g)",
+                                            colnames(final)[ncol(final)],
+                                            sum(as.vector(table(data[[group_by]]))))
+    final
   } else {
     .generate_descriptive_table(data[variables], centrality, weights, digits)
   }
@@ -161,7 +167,6 @@ report_sample <- function(data,
 
 
 
-#' @importFrom stats na.omit xtabs
 .report_sample_row.factor <- function(x, column, weights = NULL, digits = 1, ...) {
   if (!is.null(weights)) {
     x[is.na(weights)] <- NA
@@ -193,7 +198,6 @@ report_sample <- function(data,
 # print-method --------------------------------------------
 
 
-#' @importFrom insight print_colour export_table
 #' @export
 print.report_sample <- function(x, ...) {
   insight::print_colour("# Descriptive Statistics\n\n", "blue")
@@ -205,7 +209,6 @@ print.report_sample <- function(x, ...) {
 # helper for weighted stuff --------------------------
 
 
-#' @importFrom stats var na.omit
 .weighted_variance <- function(x, weights = NULL) {
   if (is.null(weights)) {
     return(stats::var(x, na.rm = TRUE))
@@ -220,7 +223,6 @@ print.report_sample <- function(x, ...) {
 
 
 
-#' @importFrom stats sd
 .weighted_sd <- function(x, weights = NULL) {
   if (is.null(weights)) {
     return(stats::sd(x, na.rm = TRUE))
@@ -230,7 +232,6 @@ print.report_sample <- function(x, ...) {
 
 
 
-#' @importFrom stats median
 .weighted_median <- function(x, weights = NULL, p = 0.5) {
   if (is.null(weights)) {
     return(stats::median(x, na.rm = TRUE))
@@ -253,7 +254,6 @@ print.report_sample <- function(x, ...) {
 
 
 
-#' @importFrom stats weighted.mean
 .weighted_mean <- function(x, weights = NULL) {
   if (is.null(weights)) {
     return(mean(x, na.rm = TRUE))

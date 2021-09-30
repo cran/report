@@ -77,7 +77,6 @@ data_findcols <- function(data, pattern = NULL, starts_with = NULL, ends_with = 
 
 
 #' @rdname data_rename
-#' @importFrom utils modifyList
 #' @export
 data_remove <- function(data, pattern) {
   new <- data[!names(data) %in% pattern]
@@ -85,12 +84,6 @@ data_remove <- function(data, pattern) {
   class(new) <- class(data)
   new
 }
-
-
-
-
-
-
 
 
 #' @rdname data_rename

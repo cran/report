@@ -1,21 +1,20 @@
 #' Report the effect size(s) of a model or a test
 #'
 #' Computes, interpret and formats the effect sizes of a variety of models and
-#' statistical tests (see list of supported objects in \code{\link{report}}).
+#' statistical tests (see list of supported objects in [report()]).
 #'
 #' @inheritParams report
 #' @inheritParams report_table
 #' @inheritParams report_text
 #' @inheritParams as.report
 #'
-#' @return An object of class \code{\link{report_effectsize}}.
+#' @return An object of class [report_effectsize()].
 #'
 #' @examples
 #' library(report)
 #'
 #' # h-tests
 #' report_effectsize(t.test(iris$Sepal.Width, iris$Sepal.Length))
-#' report_effectsize(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 #'
 #' # ANOVAs
 #' report_effectsize(aov(Sepal.Length ~ Species, data = iris))

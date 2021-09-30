@@ -1,13 +1,13 @@
 #' Report the model type
 #'
-#' Reports the type of different R objects (see list of supported objects in \code{\link{report}}).
+#' Reports the type of different R objects (see list of supported objects in [report()]).
 #'
 #' @inheritParams report
 #' @inheritParams report_table
 #' @inheritParams report_text
 #' @inheritParams as.report
 #'
-#' @return A \code{character} string.
+#' @return A `character` string.
 #'
 #' @examples
 #' \donttest{
@@ -15,7 +15,6 @@
 #'
 #' # h-tests
 #' report_model(t.test(iris$Sepal.Width, iris$Sepal.Length))
-#' report_model(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 #'
 #' # ANOVA
 #' report_model(aov(Sepal.Length ~ Species, data = iris))

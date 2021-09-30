@@ -17,7 +17,7 @@ A \code{vector}.
 }
 \description{
 Creates a list containing a description of the parameters of R objects (see
-list of supported objects in \code{\link{report}}).
+list of supported objects in \code{\link[=report]{report()}}).
 }
 \examples{
 \donttest{
@@ -36,7 +36,6 @@ report_parameters(iris)
 
 # h-tests
 report_parameters(t.test(iris$Sepal.Width, iris$Sepal.Length))
-report_parameters(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 
 # ANOVA
 report_parameters(aov(Sepal.Length ~ Species, data = iris))
