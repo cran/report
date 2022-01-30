@@ -24,17 +24,17 @@ test_that("report.aov", {
 
   model <- aov(Sepal.Length ~ Species * Cat1 + Error(Cat2), data = data)
   r5 <- report(model)
-  expect_equal(c(ncol(as.report_table(r5, summary = TRUE)), nrow(as.report_table(r5, summary = TRUE))), c(8, 4))
+  expect_equal(c(ncol(as.report_table(r5, summary = TRUE)), nrow(as.report_table(r5, summary = TRUE))), c(8, 5))
   expect_equal(as.report_table(r5, summary = TRUE)$Mean_Square[1], 31.60607, tolerance = 0.01)
 
   # snapshot tests -----
 
   set.seed(123)
-  expect_snapshot(suppressWarnings(report(anova(lm(Sepal.Width ~ Species, data = iris)))))
+  expect_snapshot(variant = .Platform$OS.type, suppressWarnings(report(anova(lm(Sepal.Width ~ Species, data = iris)))))
 
   set.seed(123)
-  expect_snapshot(suppressWarnings(report(anova(lm(wt ~ as.factor(am) * as.factor(cyl), data = mtcars)))))
+  expect_snapshot(variant = .Platform$OS.type, suppressWarnings(report(anova(lm(wt ~ as.factor(am) * as.factor(cyl), data = mtcars)))))
 
   set.seed(123)
-  expect_snapshot(suppressWarnings(report(aov(wt ~ cyl + Error(gear), data = mtcars))))
+  expect_snapshot(variant = .Platform$OS.type, suppressWarnings(report(aov(wt ~ cyl + Error(gear), data = mtcars))))
 })

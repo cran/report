@@ -33,14 +33,15 @@ report.htest <- function(x, ...) {
 #' @rdname report.htest
 #' @export
 report_effectsize.htest <- function(x, ...) {
-  table <- effectsize::effectsize(x, verbose = FALSE, ...)
-  estimate <- names(table)[1]
-  ci <- table$CI
 
   # For t-tests ----------------
 
   if (insight::model_info(x)$is_ttest) {
-    interpretation <- effectsize::interpret_d(table[[estimate]], ...)
+    table <- effectsize::cohens_d(x, ...)
+    ci <- attributes(table)$ci
+    estimate <- names(table)[1]
+
+    interpretation <- effectsize::interpret_cohens_d(table[[estimate]], ...)
     rules <- .text_effectsize(attributes(interpretation)$rule_name)
 
     if (estimate %in% c("d", "Cohens_d")) {
@@ -55,7 +56,7 @@ report_effectsize.htest <- function(x, ...) {
       insight::format_ci(table$CI_low, table$CI_high, ci)
     )
 
-    table <- data_rename(
+    table <- datawizard::data_rename(
       as.data.frame(table),
       c("CI_low", "CI_high"),
       paste0(estimate, c("_CI_low", "_CI_high"))
@@ -67,34 +68,31 @@ report_effectsize.htest <- function(x, ...) {
   # For wilcox test ---------------
 
   if (insight::model_info(x)$is_ranktest && !insight::model_info(x)$is_correlation) {
+    table <- parameters::parameters(x, rank_biserial = TRUE, ...)
+    ci <- attributes(table)$ci
+    estimate <- "r_rank_biserial"
+
     # same as Pearson's r
-    interpretation <- effectsize::interpret_r(table[[estimate]], ...)
+    interpretation <- effectsize::interpret_r(table$r_rank_biserial, ...)
     rules <- .text_effectsize(attributes(interpretation)$rule_name)
 
-    if (estimate %in% c("r_rank_biserial")) {
-      main <- paste0("r (rank biserial) = ", insight::format_value(table[[estimate]]))
-    } else {
-      main <- paste0(estimate, " = ", insight::format_value(table[[estimate]]))
-    }
-
+    main <- paste0("r (rank biserial) = ", insight::format_value(table$r_rank_biserial))
     statistics <- paste0(
       main,
       ", ",
-      insight::format_ci(table$CI_low, table$CI_high, ci)
+      insight::format_ci(table$rank_biserial_CI_low, table$rank_biserial_CI_high, ci)
     )
 
-    table <- data_rename(
-      as.data.frame(table),
-      c("CI_low", "CI_high"),
-      paste0(estimate, c("_CI_low", "_CI_high"))
-    )
-
-    table <- table[c(estimate, paste0(estimate, c("_CI_low", "_CI_high")))]
+    table <- table[c("r_rank_biserial", "rank_biserial_CI_low", "rank_biserial_CI_high")]
   }
 
   # For correlations ---------------
 
   if (insight::model_info(x)$is_correlation) {
+    table <- parameters::parameters(x, ...)
+    ci <- attributes(table)$ci
+    estimate <- names(table)[3]
+
     # Pearson
     interpretation <- effectsize::interpret_r(table[[estimate]], ...)
     rules <- .text_effectsize(attributes(interpretation)$rule_name)
@@ -151,7 +149,7 @@ report_table.htest <- function(x, ...) {
   # If t-test, effect size
   if (insight::model_info(x)$is_ttest) {
     table_full <- cbind(table_full, attributes(effsize)$table)
-    table <- data_remove(
+    table <- datawizard::data_remove(
       table_full,
       c("Parameter", "Group", "Mean_Group1", "Mean_Group2", "Method")
     )

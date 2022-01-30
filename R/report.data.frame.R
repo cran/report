@@ -6,7 +6,8 @@
 #' @param n Include number of observations for each individual variable.
 #' @param centrality Character vector, indicating the index of centrality
 #'   (either `"mean"` or `"median"`).
-#' @param dispersion Show index of dispersion ([sd] if `centrality = "mean"`, or [mad] if `centrality = "median"`).
+#' @param dispersion Show index of dispersion ([sd] if `centrality = "mean"`, or
+#'   [mad] if `centrality = "median"`).
 #' @param range Show range.
 #' @param distribution Show kurtosis and skewness.
 #' @param n_entries Number of different character entries to show. Can be "all".
@@ -30,9 +31,10 @@
 #' as.data.frame(r)
 #' summary(as.data.frame(r))
 #'
+#' # grouped analysis using `{dplyr}` package
 #' if (require("dplyr")) {
 #'   r <- iris %>%
-#'     dplyr::group_by(Species) %>%
+#'     group_by(Species) %>%
 #'     report()
 #'   r
 #'   summary(r)
@@ -54,7 +56,15 @@ report.data.frame <- function(x,
                               ...) {
 
   # remove list columns
-  x <- x[, sapply(x, Negate(inherits), what = "list")]
+  if (.has_groups(x) && !inherits(x, "tbl_df")) {
+    x <- .groups_set(
+      x[, sapply(x, Negate(inherits), what = "list")],
+      groups = .group_vars(x),
+      drop = .groups_drop(x)
+    )
+  } else {
+    x <- x[, sapply(x, Negate(inherits), what = "list")]
+  }
 
   table <-
     report_table(

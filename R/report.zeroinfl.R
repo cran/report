@@ -21,10 +21,10 @@ report_intercept.zeroinfl <- report_intercept.lm
 report_model.zeroinfl <- report_model.lm
 
 #' @export
-report_performance.zeroinfl <- report_performance.lm
-
-#' @export
 report_info.zeroinfl <- report_info.lm
 
 #' @export
 report_text.zeroinfl <- report_text.lm
+
+#' @export
+report_performance.zeroinfl <- report_performance.lm

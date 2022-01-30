@@ -34,7 +34,7 @@
 #' }
 #'
 #' # Structural Equation Models (SEM)
-#' if (require("lavaan")) {
+#' if (require("lavaan") && packageVersion("effectsize") >= "0.6.0.1" && FALSE) {
 #'   structure <- " ind60 =~ x1 + x2 + x3
 #'                  dem60 =~ y1 + y2 + y3
 #'                  dem60 ~ ind60 "
@@ -264,7 +264,7 @@ print.report_performance <- function(x, ...) {
   if (length(perf_table[perf_table$Interpretation == "satisfactory", "Text"]) >= 1) {
     text_satisfactory <- paste0(
       "The ",
-      report::format_text(perf_table[perf_table$Interpretation == "satisfactory", "Text"]),
+      format_text(perf_table[perf_table$Interpretation == "satisfactory", "Text"]),
       ifelse(length(perf_table[perf_table$Interpretation == "satisfactory", "Text"]) > 1, " suggest", " suggests"),
       " a satisfactory fit."
     )
@@ -276,7 +276,7 @@ print.report_performance <- function(x, ...) {
   if (length(perf_table[perf_table$Interpretation == "poor", "Text"]) >= 1) {
     text_poor <- paste0(
       "The ",
-      report::format_text(perf_table[perf_table$Interpretation == "poor", "Text"]),
+      format_text(perf_table[perf_table$Interpretation == "poor", "Text"]),
       ifelse(length(perf_table[perf_table$Interpretation == "poor", "Text"]) > 1, " suggest", " suggests"),
       " a poor fit."
     )
