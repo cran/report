@@ -13,11 +13,15 @@
 #' @inherit report return seealso
 #'
 #' @examples
+#' # t-tests
 #' report(t.test(iris$Sepal.Width, iris$Sepal.Length))
 #' report(t.test(iris$Sepal.Width, iris$Sepal.Length, var.equal = TRUE))
 #' report(t.test(mtcars$mpg ~ mtcars$vs))
 #' report(t.test(mtcars$mpg, mtcars$vs, paired = TRUE))
 #' report(t.test(iris$Sepal.Width, mu = 1))
+#'
+#' # Correlations
+#' report(cor.test(iris$Sepal.Width, iris$Sepal.Length))
 #' @return An object of class [report()].
 #' @export
 report.htest <- function(x, ...) {
@@ -42,7 +46,7 @@ report_effectsize.htest <- function(x, ...) {
     estimate <- names(table)[1]
 
     interpretation <- effectsize::interpret_cohens_d(table[[estimate]], ...)
-    rules <- .text_effectsize(attributes(interpretation)$rule_name)
+    rules <- .text_effectsize(attr(attr(interpretation, "rules"), "rule_name"))
 
     if (estimate %in% c("d", "Cohens_d")) {
       main <- paste0("Cohen's d = ", insight::format_value(table[[estimate]]))
@@ -74,7 +78,7 @@ report_effectsize.htest <- function(x, ...) {
 
     # same as Pearson's r
     interpretation <- effectsize::interpret_r(table$r_rank_biserial, ...)
-    rules <- .text_effectsize(attributes(interpretation)$rule_name)
+    rules <- .text_effectsize(attr(attr(interpretation, "rules"), "rule_name"))
 
     main <- paste0("r (rank biserial) = ", insight::format_value(table$r_rank_biserial))
     statistics <- paste0(
@@ -95,7 +99,7 @@ report_effectsize.htest <- function(x, ...) {
 
     # Pearson
     interpretation <- effectsize::interpret_r(table[[estimate]], ...)
-    rules <- .text_effectsize(attributes(interpretation)$rule_name)
+    rules <- .text_effectsize(attr(attr(interpretation, "rules"), "rule_name"))
     main <- paste0(estimate, " = ", insight::format_value(table[[estimate]]))
 
     if ("CI_low" %in% names(table)) {

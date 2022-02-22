@@ -1,7 +1,7 @@
 Type: Package
 Package: report
 Title: Automated Reporting of Results and Statistical Models
-Version: 0.5.0
+Version: 0.5.1
 Authors@R: 
     c(person(given = "Dominique",
              family = "Makowski",
@@ -43,8 +43,8 @@ License: GPL-3 | file LICENSE
 URL: https://easystats.github.io/report/
 BugReports: https://github.com/easystats/report/issues
 Imports: bayestestR (>= 0.11.5), effectsize (>= 0.6.0), insight (>=
-        0.15.0), parameters (>= 0.16.0), performance (>= 0.8.0),
-        datawizard (>= 0.2.2), stats, tools, utils
+        0.16.0), parameters (>= 0.16.0), performance (>= 0.8.0),
+        datawizard (>= 0.2.3), stats, tools, utils
 Suggests: BayesFactor, brms, httr, ivreg, knitr, lavaan, lme4,
         logspline, dplyr, rmarkdown, rstanarm, spelling, survival,
         testthat
@@ -71,7 +71,7 @@ Collate: 'cite_easystats.R' 'format_algorithm.R' 'format_citation.R'
         'report_statistics.R' 'report_table.R' 'utils_error_message.R'
         'utils_grouped_df.R'
 NeedsCompilation: no
-Packaged: 2022-01-30 04:43:20 UTC; domma
+Packaged: 2022-02-21 07:19:58 UTC; Dom
 Author: Dominique Makowski [aut, cre] (<https://orcid.org/0000-0001-5375-9967>,
     @Dom_Makowski),
   Daniel Lüdecke [aut] (<https://orcid.org/0000-0002-8895-3206>,
@@ -84,4 +84,4 @@ Author: Dominique Makowski [aut, cre] (<https://orcid.org/0000-0001-5375-9967>,
     @bmwiernik),
   Rudolf Siegel [ctb] (<https://orcid.org/0000-0002-6021-804X>)
 Repository: CRAN
-Date/Publication: 2022-01-30 05:00:02 UTC
+Date/Publication: 2022-02-22 13:00:02 UTC
