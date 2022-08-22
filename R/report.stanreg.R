@@ -63,7 +63,7 @@ report_priors.stanreg <- function(x, ...) {
   params <- params[params$Parameter != "(Intercept)", ]
 
   # Return empty if no priors info
-  if (!"Prior_Distribution" %in% names(params) | nrow(params) == 0) {
+  if (!"Prior_Distribution" %in% names(params) || nrow(params) == 0) {
     return("")
   }
 
@@ -85,10 +85,10 @@ report_priors.stanreg <- function(x, ...) {
 
   values <- paste0(params$Prior_Distribution, " (", values, ")")
 
-  if (length(unique(values)) == 1 & nrow(params) > 1) {
+  if (length(unique(values)) == 1 && nrow(params) > 1) {
     text <- paste0("all set as ", values[1])
   } else {
-    text <- paste0("set as ", format_text(values))
+    text <- paste0("set as ", values)
   }
 
   text <- paste0("Priors over parameters were ", text, " distributions")
@@ -104,7 +104,6 @@ report_parameters.stanreg <- function(x,
                                       include_intercept = TRUE,
                                       include_diagnostic = TRUE,
                                       ...) {
-
   # Get data
   data <- bayestestR::sexit(x, ...)
 
@@ -117,7 +116,7 @@ report_parameters.stanreg <- function(x,
   text <- .parameters_starting_text(x, params)
 
   # Replace parameters names
-  for (i in 1:length(text)) {
+  for (i in seq_along(text)) {
     att$sexit_textlong[i] <- gsub(names(text)[i], text[i], att$sexit_textlong[i], fixed = TRUE)
     att$sexit_textshort[i] <- gsub(names(text)[i], text[i], att$sexit_textshort[i], fixed = TRUE)
   }
@@ -136,9 +135,9 @@ report_parameters.stanreg <- function(x,
   if (include_diagnostic) {
     diagnostic <- bayestestR::diagnostic_posterior(x, ...)
 
-    text <- text_paste(text, .parameters_diagnostic_bayesian(diagnostic, only_when_insufficient = TRUE)[idx], sep = ". ")
+    text <- datawizard::text_paste(text, .parameters_diagnostic_bayesian(diagnostic, only_when_insufficient = TRUE)[idx], sep = ". ")
 
-    text_full <- text_paste(text_full, .parameters_diagnostic_bayesian(diagnostic, only_when_insufficient = FALSE)[idx], sep = ". ")
+    text_full <- datawizard::text_paste(text_full, .parameters_diagnostic_bayesian(diagnostic, only_when_insufficient = FALSE)[idx], sep = ". ")
 
     info <- paste(info, "Convergence and stability of the Bayesian sampling has been assessed using R-hat, which should be below 1.01 (Vehtari et al., 2019), and Effective Sample Size (ESS), which should be greater than 1000 (Burkner, 2017).")
   }

@@ -76,11 +76,7 @@ summary.report_performance <- function(object, ...) {
 }
 
 #' @export
-print.report_performance <- function(x, ...) {
-  cat(paste0(x, collapse = "\n"))
-}
-
-
+print.report_performance <- print.report_text
 
 # Utils -------------------------------------------------------------------
 
@@ -149,8 +145,8 @@ print.report_performance <- function(x, ...) {
         ")"
       )
     } else {
-      if (text_lastchar(text_full) != ")") text_full <- paste0(text_full, ")")
-      if (text_lastchar(text) != ")") text <- paste0(text, ")")
+      if (datawizard::text_lastchar(text_full) != ")") text_full <- paste0(text_full, ")")
+      if (datawizard::text_lastchar(text) != ")") text <- paste0(text, ")")
     }
   }
 
@@ -264,7 +260,7 @@ print.report_performance <- function(x, ...) {
   if (length(perf_table[perf_table$Interpretation == "satisfactory", "Text"]) >= 1) {
     text_satisfactory <- paste0(
       "The ",
-      format_text(perf_table[perf_table$Interpretation == "satisfactory", "Text"]),
+      perf_table[perf_table$Interpretation == "satisfactory", "Text"],
       ifelse(length(perf_table[perf_table$Interpretation == "satisfactory", "Text"]) > 1, " suggest", " suggests"),
       " a satisfactory fit."
     )
@@ -276,7 +272,7 @@ print.report_performance <- function(x, ...) {
   if (length(perf_table[perf_table$Interpretation == "poor", "Text"]) >= 1) {
     text_poor <- paste0(
       "The ",
-      format_text(perf_table[perf_table$Interpretation == "poor", "Text"]),
+      perf_table[perf_table$Interpretation == "poor", "Text"],
       ifelse(length(perf_table[perf_table$Interpretation == "poor", "Text"]) > 1, " suggest", " suggests"),
       " a poor fit."
     )
@@ -284,6 +280,6 @@ print.report_performance <- function(x, ...) {
     text_poor <- ""
   }
 
-  text <- text_paste(text_satisfactory, text_poor, sep = " ")
+  text <- datawizard::text_paste(text_satisfactory, text_poor, sep = " ")
   text
 }

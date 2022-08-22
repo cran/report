@@ -7,7 +7,7 @@ knitr::opts_chunk$set(
 )
 
 options(
-  knitr.kable.NA = '', 
+  knitr.kable.NA = "",
   width = 60
 )
 

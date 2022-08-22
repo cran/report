@@ -34,7 +34,7 @@ report.aovlist <- report.aov
 #' @rdname report.aov
 #' @export
 report_effectsize.aov <- function(x, ...) {
-  table <- effectsize::effectsize(x, ...)
+  table <- suppressMessages(effectsize::effectsize(x, include_intercept = TRUE, ...))
   estimate <- names(table)[effectsize::is_effectsize_name(names(table))]
 
   if (estimate == "Eta2_partial") {
@@ -124,7 +124,10 @@ report_table.aov <- function(x, ...) {
 
   row.names(table_full) <- NULL
 
-  table <- data_remove(table_full, data_findcols(table_full, ends_with = c("_CI_low|_CI_high")))
+  table <- datawizard::data_remove(
+    table_full,
+    datawizard::data_find(table_full, select = "(_CI_low|_CI_high)$", regex = TRUE)
+  )
 
   as.report_table(
     table_full,
@@ -146,7 +149,7 @@ report_table.aovlist <- report_table.aov
 #' @rdname report.aov
 #' @export
 report_statistics.aov <- function(x, table = NULL, ...) {
-  if (is.null(table) | is.null(attributes(table)$effsize)) {
+  if (is.null(table) || is.null(attributes(table)$effsize)) {
     table <- report_table(x, ...)
   }
   effsize <- attributes(table)$effsize

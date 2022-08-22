@@ -71,7 +71,6 @@ print.report_intercept <- function(x, ...) {
 
 #' @keywords internal
 .find_intercept <- function(model) {
-
   # Intercept-only
   if (insight::is_nullmodel(model)) {
     return("")
@@ -92,7 +91,7 @@ print.report_intercept <- function(x, ...) {
       text <- c(text, paste0(col, " = [?]"))
     }
   }
-  paste0(", corresponding to ", format_text(text), ",")
+  paste0(", corresponding to ", text, ",")
 }
 
 

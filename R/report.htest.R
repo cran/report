@@ -37,7 +37,6 @@ report.htest <- function(x, ...) {
 #' @rdname report.htest
 #' @export
 report_effectsize.htest <- function(x, ...) {
-
   # For t-tests ----------------
 
   if (insight::model_info(x)$is_ttest) {
@@ -114,7 +113,7 @@ report_effectsize.htest <- function(x, ...) {
       # For Spearman and co.
     } else {
       statistics <- main
-      table <- table[c(estimate)]
+      table <- table[estimate]
     }
   }
 
@@ -122,7 +121,7 @@ report_effectsize.htest <- function(x, ...) {
 
   if (insight::model_info(x)$is_chi2test || insight::model_info(x)$is_proptest ||
     insight::model_info(x)$is_xtab) {
-    stop("This test is not yet supported. Please open an issue: https://github.com/easystats/report/issues")
+    stop("This test is not yet supported. Please open an issue: https://github.com/easystats/report/issues", call. = FALSE)
   }
 
   parameters <- paste0(interpretation, " (", statistics, ")")
@@ -179,11 +178,14 @@ report_statistics.htest <- function(x, table = NULL, ...) {
   }
 
   effsize <- attributes(table)$effsize
+  text <- NULL
 
   # Estimate
   candidates <- c("rho", "r", "tau", "Difference", "r_rank_biserial")
   estimate <- candidates[candidates %in% names(table)][1]
-  text <- paste0(tolower(estimate), " = ", insight::format_value(table[[estimate]]))
+  if (!is.null(estimate) && !is.na(estimate)) {
+    text <- paste0(tolower(estimate), " = ", insight::format_value(table[[estimate]]))
+  }
 
   # CI
   if (!is.null(attributes(x$conf.int)$conf.level)) {
@@ -244,6 +246,11 @@ report_parameters.htest <- function(x, table = NULL, ...) {
   table <- attributes(stats)$table
   effsize <- attributes(stats)$effsize
 
+
+  ## TODO see https://github.com/easystats/report/issues/256
+  # insight::model_info() returns "$is_correlation" for shapiro-test,
+  # but shapiro-test has no "estimate", so this fails. We probably need
+  # to handle shapiro separately
 
   # Correlations
   if (insight::model_info(x)$is_correlation) {

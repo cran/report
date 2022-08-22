@@ -105,10 +105,10 @@ print.report_parameters <- function(x, ...) {
 
 #' @keywords internal
 .format_parameters_aov <- function(names) {
-  for (i in 1:length(names)) {
+  for (i in seq_along(names)) {
     if (grepl(":", names[i], fixed = TRUE)) {
-      names[i] <- format_text(unlist(strsplit(names[i], ":", fixed = TRUE)))
-      names[i] <- paste0("The interaction between ", names[i])
+      interaction_terms <- unlist(strsplit(names[i], ":", fixed = TRUE))
+      names[i] <- paste0("The interaction between ", datawizard::text_concatenate(interaction_terms))
     } else {
       names[i] <- paste0("The main effect of ", names[i])
     }
@@ -118,7 +118,7 @@ print.report_parameters <- function(x, ...) {
 
 #' @keywords internal
 .format_parameters_regression <- function(names) {
-  for (i in 1:length(names)) {
+  for (i in seq_along(names)) {
     # Interaction
     if (grepl(" * ", names[i], fixed = TRUE)) {
       parts <- unlist(strsplit(names[i], " * ", fixed = TRUE))
@@ -157,7 +157,6 @@ print.report_parameters <- function(x, ...) {
 
 #' @keywords internal
 .parameters_diagnostic_bayesian <- function(diagnostic, only_when_insufficient = FALSE, ...) {
-
   # Convergence
   if ("Rhat" %in% names(diagnostic)) {
     convergence <- effectsize::interpret_rhat(diagnostic$Rhat, ...)

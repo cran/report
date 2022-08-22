@@ -14,6 +14,19 @@
 
 <title>Report and Cite Packages</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -25,6 +38,7 @@
     </style>
 
 
+
 <style type="text/css">
   code {
     white-space: pre;
@@ -34,26 +48,28 @@
   }
 </style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
-code.sourceCode { white-space: pre; position: relative; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
 div.sourceCode { margin: 1em 0; }
 pre.sourceCode { margin: 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
 @media print {
-code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(title);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -62,9 +78,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -319,56 +335,98 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#what-should-i-cite">What should I cite?</a><ul>
-<li><a href="#cite-the-mainimportant-packages-in-the-manuscript">1. Cite the main/important packages in the manuscript</a></li>
-<li><a href="#present-everything-in-supplementary-materials">2. Present everything in Supplementary Materials</a></li>
+<li><a href="#what-should-i-cite" id="toc-what-should-i-cite">What
+should I cite?</a>
+<ul>
+<li><a href="#cite-the-mainimportant-packages-in-the-manuscript" id="toc-cite-the-mainimportant-packages-in-the-manuscript">1. Cite the
+main/important packages in the manuscript</a></li>
+<li><a href="#present-everything-in-supplementary-materials" id="toc-present-everything-in-supplementary-materials">2. Present
+everything in Supplementary Materials</a></li>
 </ul></li>
-<li><a href="#where">Where</a></li>
-<li><a href="#cite_easystats">cite_easystats()</a></li>
-<li><a href="#references">References</a></li>
-<li><a href="#bibtex-entries">Bibtex entries:</a></li>
+<li><a href="#where" id="toc-where">Where</a></li>
+<li><a href="#cite_easystats" id="toc-cite_easystats">cite_easystats()</a></li>
+<li><a href="#citations" id="toc-citations">Citations</a></li>
+<li><a href="#references" id="toc-references">References</a></li>
 </ul>
 </div>
 
-<p><strong>Citing the packages, modules and software</strong> you used for your analysis is important to acknowledge the time and effort spent by people who create theses tools (sometimes in their free-time, or at the expense of their own research), but also for <strong>reproducibility</strong>. Indeed, statistical routines are often implemented in different ways by different packages, which can lead to possible discrepancies in the results. Explicitly mentioning that <em>“I did this using this function from that package version 1.2.3”</em> is a way of <strong>protecting yourself</strong> by being transparent about what you have found doing what you have done.</p>
+<p><strong>Citing the packages, modules and software</strong> you used
+for your analysis is important to acknowledge the time and effort spent
+by people who create theses tools (sometimes in their free-time, or at
+the expense of their own research), but also for
+<strong>reproducibility</strong>. Indeed, statistical routines are often
+implemented in different ways by different packages, which can lead to
+possible discrepancies in the results. Explicitly mentioning that <em>“I
+did this using this function from that package version 1.2.3”</em> is a
+way of <strong>protecting yourself</strong> by being transparent about
+what you have found doing what you have done.</p>
 <p>But, understandably, you must have a lot of questions-</p>
 <blockquote>
-<p><strong>That’s great, but how to <em>actually</em> cite them?</strong></p>
+<p><strong>That’s great, but how to <em>actually</em> cite
+them?</strong></p>
 </blockquote>
 <blockquote>
-<p><strong>I used about 100 packages, should I cite them <em>all</em>?</strong></p>
+<p><strong>I used about 100 packages, should I cite them
+<em>all</em>?</strong></p>
 </blockquote>
 <blockquote>
-<p><strong>How should I report the system (the OS, the R version, etc.)?</strong></p>
+<p><strong>How should I report the system (the OS, the R version,
+etc.)?</strong></p>
 </blockquote>
 <p>We attempt to answer these questions below :)</p>
 <div id="what-should-i-cite" class="section level2">
 <h2>What should I cite?</h2>
-<p>Ideally, you should indeed cite all the packages that you used. However, it’s often not possible to cite them all in the manuscript body. Therefore, we would recommend the following guidelines:</p>
+<p>Ideally, you should indeed cite all the packages that you used.
+However, it’s often not possible to cite them all in the manuscript
+body. Therefore, we would recommend the following guidelines:</p>
 <div id="cite-the-mainimportant-packages-in-the-manuscript" class="section level3">
 <h3>1. Cite the main/important packages in the manuscript</h3>
-<p>This should be done for the packages that were central to your specific study (<em>i.e.,</em> that got you the results that you reported) rather than data manipulation tools (even though these are as much, if not <em>more</em>, important). For example:</p>
+<p>This should be done for the packages that were central to your
+specific study (<em>i.e.,</em> that got you the results that you
+reported) rather than data manipulation tools (even though these are as
+much, if not <em>more</em>, important). For example:</p>
 <blockquote>
-<p>Statistical analysis were carried out using R 4.1.0 (R Core Team, 2021), the <em>rstanarm</em> (<em>v2.13.1</em>; Gabry &amp; Goodrich, 2016) and the <em>report</em> (<em>v0.2.0</em>; Makowski, Patil, &amp; Lüdecke, 2019) packages. The full reproducible code is available in <strong>Supplementary Materials</strong>.</p>
+<p>Statistical analysis were carried out using R 4.1.0 (R Core Team,
+2021), the <em>rstanarm</em> (<em>v2.13.1</em>; Gabry &amp; Goodrich,
+2016) and the <em>report</em> (<em>v0.2.0</em>; Makowski, Patil, &amp;
+Lüdecke, 2019) packages. The full reproducible code is available in
+<strong>Supplementary Materials</strong>.</p>
 </blockquote>
 </div>
 <div id="present-everything-in-supplementary-materials" class="section level3">
 <h3>2. Present everything in Supplementary Materials</h3>
-<p>Then, in <em>Supplementary Materials</em>, you can show all the packages and functions you used. To do it quickly, explicitly and in a reproducible fashion, we recommend writing the <em>Supplementary Materials</em> with <a href="https://rmarkdown.rstudio.com/"><strong>R Markdown</strong></a>, which can generate <em>docs</em> and <em>pdf</em> files that you can submit along with your manuscript. Moreover, if you’re using R, you can include (usually at the end) every used package’s citation using the <code>cite_packages()</code> function from the <a href="https://github.com/easystats/report"><strong>report</strong></a> package. For example:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(report)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(dplyr)</a>
-<a class="sourceLine" id="cb1-3" title="3"></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="kw">cite_packages</span>()</a></code></pre></div>
+<p>Then, in <em>Supplementary Materials</em>, you can show all the
+packages and functions you used. To do it quickly, explicitly and in a
+reproducible fashion, we recommend writing the <em>Supplementary
+Materials</em> with <a href="https://rmarkdown.rstudio.com/"><strong>R
+Markdown</strong></a>, which can generate <em>docs</em> and <em>pdf</em>
+files that you can submit along with your manuscript. Moreover, if
+you’re using R, you can include (usually at the end) every used
+package’s citation using the <code>cite_packages()</code> function from
+the <a href="https://github.com/easystats/report"><strong>report</strong></a>
+package. For example:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(report)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cite_packages</span>()</span></code></pre></div>
 <ul>
-<li>Hadley Wickham, Romain François, Lionel Henry and Kirill Müller (2021). dplyr: A Grammar of Data Manipulation. R package version 1.0.7. <a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a></li>
-<li>Makowski, D., Ben-Shachar, M.S., Patil, I. &amp; Lüdecke, D. (2020). Automated Results Reporting as a Practical Tool to Improve Reproducibility and Methodological Best Practices Adoption. CRAN. Available from <a href="https://github.com/easystats/report" class="uri">https://github.com/easystats/report</a>. doi: .</li>
-<li>R Core Team (2021). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna, Austria. URL <a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</li>
+<li>Makowski D, Ben-Shachar M, Patil I, Lüdecke D (2021).”Automated
+Results Reporting as a Practical Tool toImprove Reproducibility and
+Methodological BestPractices Adoption.” <em>CRAN</em>.<a href="https://github.com/easystats/report" class="uri">https://github.com/easystats/report</a>.</li>
+<li>R Core Team (2022). <em>R: A Language and Environmentfor Statistical
+Computing</em>. R Foundation forStatistical Computing, Vienna,
+Austria.<a href="https://www.R-project.org/" class="uri">https://www.R-project.org/</a>.</li>
+<li>Wickham H, François R, Henry L, Müller K (2022)._dplyr: A Grammar of
+Data Manipulation_. R packageversion 1.0.9,<a href="https://CRAN.R-project.org/package=dplyr" class="uri">https://CRAN.R-project.org/package=dplyr</a>.</li>
 </ul>
 </div>
 </div>
 <div id="where" class="section level2">
 <h2>Where</h2>
-<p>Finding the right citation information is sometimes complicated. In <code>R</code>, this process is made quite easy, you simply run <code>citation(&quot;packagename&quot;)</code>. For instance, <code>citation(&quot;bayestestR&quot;)</code>:</p>
+<p>Finding the right citation information is sometimes complicated. In
+<code>R</code>, this process is made quite easy, you simply run
+<code>citation(&quot;packagename&quot;)</code>. For instance,
+<code>citation(&quot;bayestestR&quot;)</code>:</p>
 <pre><code>To cite bayestestR in publications use:
 
   Makowski, D., Ben-Shachar, M., \&amp; Lüdecke, D. (2019). bayestestR:
@@ -389,33 +447,35 @@ A BibTeX entry for LaTeX users is
     pages = {1541},
     url = {https://joss.theoj.org/papers/10.21105/joss.01541},
   }</code></pre>
-<p>For other languages, such as <code>Python</code> or <code>Julia</code>, it might be a little trickier, but a quick search on Google (or github) should provide you with all the necessary information (version, authors and date).</p>
-<p><strong>Keep in mind that it’s better to have a slightly incomplete citation than no citation at all.</strong></p>
+<p>For other languages, such as <code>Python</code> or
+<code>Julia</code>, it might be a little trickier, but a quick search on
+Google (or github) should provide you with all the necessary information
+(version, authors and date).</p>
+<p><strong>Keep in mind that it’s better to have a slightly incomplete
+citation than no citation at all.</strong></p>
 </div>
 <div id="cite_easystats" class="section level2">
 <h2>cite_easystats()</h2>
-<p>If you want to cite the <strong>easystats</strong> ecosystem, you can use the <a href="https://easystats.github.io/report/reference/cite_easystats.html"><code>cite_easystats()</code></a> function:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">cite_easystats</span>()</a></code></pre></div>
-<p>Thanks for crediting us :) You can cite the ‘easystats’ ecosystem as follows:</p>
-<p>Data analysis was carried out using the ‘easystats’ collection of packagaes (Ludecke, Waggoner, &amp; Makowski, 2019; Makowski, Ben-Shachar, &amp; Ludecke, 2019; Makowski, Ben-Shachar, Patil, &amp; Ludecke, 2020; Ludecke, Ben-Shachar, Patil, &amp; Makowski, 2020; Ben-Shachar, Ludecke, &amp; Makowski, 2020).</p>
+<p>If you want to cite the <strong>easystats</strong> ecosystem, you can
+use the <a href="https://easystats.github.io/report/reference/cite_easystats.html"><code>cite_easystats()</code></a>
+function:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cite_easystats</span>()</span></code></pre></div>
+<p>Thanks for crediting us! 😀 You can cite the easystats ecosystem as
+follows:</p>
+</div>
+<div id="citations" class="section level2">
+<h2>Citations</h2>
+<p>Analyses were conducted using the <em>easystats</em> collection of
+packages (Lüdecke et al., 2019/2022).</p>
 </div>
 <div id="references" class="section level2">
 <h2>References</h2>
 <ul>
-<li>Ludecke, D., Waggoner, P. D., &amp; Makowski, D. (2019). insight: A Unified Interface to Access Information from Model Objects in R. Journal of Open Source Software, 4, 1412. doi: 10.21105/joss.01412</li>
-<li>Makowski, D., Ben-Shachar, M.S., &amp; Ludecke, D. (2019). bayestestR: Describing Effects and their Uncertainty, Existence and Significance within the Bayesian Framework. Journal of Open Source Software, 4(40), 1541. 10.21105/joss.01541</li>
-<li>Ludecke, D., Ben-Shachar, M.S., Patil, I., Makowski, D. (2020). parameters: Extracting, Computing and Exploring the Parameters of Statistical Models using R. Journal of Open Source Software, 5(53), 2445. doi: 10.21105/joss.02445</li>
-<li>Ben-Shachar, M.S., Ludecke, D., Makowski, D. (2020). effectsize: Estimation of Effect Size Indices and Standardized Parameters. Journal of Open Source Software, 5(56), 2815. doi: 10.21105/joss.02815</li>
-<li>Makowski, D., Ben-Shachar, M.S., Patil, I., &amp; Ludecke, D. (2019). Methods and Algorithms for Correlation Analysis in R. Journal of Open Source Software, 5(51), 2306. 10.21105/joss.02306</li>
+<li>Lüdecke, D., Makowski, D., Ben-Shachar, M. S., Patil, I., &amp;
+Wiernik, B. M. (2022). easystats: Streamline model interpretation,
+visualization, and reporting (0.4.3) [R package]. <a href="https://github.com/easystats/easystats" class="uri">https://github.com/easystats/easystats</a> (Original work
+published 2019)</li>
 </ul>
-</div>
-<div id="bibtex-entries" class="section level2">
-<h2>Bibtex entries:</h2>
-<p><span class="citation">@article</span>{ludecke2019insight, journal = {Journal of Open Source Software}, doi = {10.21105/joss.01412}, issn = {2475-9066}, number = {38}, publisher = {The Open Journal}, title = {insight: A Unified Interface to Access Information from Model Objects in R}, url = {<a href="http://dx.doi.org/10.21105/joss.01412" class="uri">http://dx.doi.org/10.21105/joss.01412</a>}, volume = {4}, author = {L{&quot;u}decke, Daniel and Waggoner, Philip and Makowski, Dominique}, pages = {1412}, date = {2019-06-25}, year = {2019}, month = {6}, day = {25} }</p>
-<p><span class="citation">@article</span>{makowski2019bayestestr, title = {{bayestestR}: {Describing} {Effects} and their {Uncertainty}, {Existence} and {Significance} within the {Bayesian} {Framework}}, volume = {4}, issn = {2475-9066}, shorttitle = {{bayestestR}}, url = {<a href="https://joss.theoj.org/papers/10.21105/joss.01541" class="uri">https://joss.theoj.org/papers/10.21105/joss.01541</a>}, doi = {10.21105/joss.01541}, number = {40}, urldate = {2019-08-13}, journal = {Journal of Open Source Software}, author = {Makowski, Dominique and Ben-Shachar, Mattan S. and L{&quot;u}decke, Daniel}, month = aug, year = {2019}, pages = {1541} }</p>
-<p><span class="citation">@article</span>{makowski2020correlation, doi={10.21105/joss.02306}, title={Methods and Algorithms for Correlation Analysis in R}, author={Makowski, Dominique and Ben-Shachar, Mattan S. and Patil, Indrajeet and L{&quot;u}decke, Daniel}, journal={Journal of Open Source Software}, volume={5}, number={51}, pages={2306}, year={2020} }</p>
-<p><span class="citation">@article</span>{ludecke20202parameters, title = {parameters: Extracting, Computing and Exploring the Parameters of Statistical Models using {R}.}, volume = {5}, doi = {10.21105/joss.02445}, number = {53}, journal = {Journal of Open Source Software}, author = {Daniel L{&quot;u}decke and Mattan S. Ben-Shachar and Indrajeet Patil and Dominique Makowski}, year = {2020}, pages = {2445}, }</p>
-<p><span class="citation">@article</span>{benchashar2020effectsize, title = {{e}ffectsize: Estimation of Effect Size Indices and Standardized Parameters}, author = {Mattan S. Ben-Shachar and Daniel L{&quot;u}decke and Dominique Makowski}, year = {2020}, journal = {Journal of Open Source Software}, volume = {5}, number = {56}, pages = {2815}, publisher = {The Open Journal}, doi = {10.21105/joss.02815}, url = {<a href="https://doi.org/10.21105/joss.02815" class="uri">https://doi.org/10.21105/joss.02815</a>}, }</p>
 </div>
 
 

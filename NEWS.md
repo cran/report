@@ -1,3 +1,22 @@
+# report 0.5.2
+
+BREAKING CHANGES
+
+* The minimum needed R version is now bumped to 3.5.
+
+Minor changes
+
+* `report_participants` improvement (@rempsyc, #260)
+
+    * Now correctly reports NA values as % missing
+
+    * Adds support for country and race demographic information
+
+BUG FIXES
+
+* Fixed bug with truncated output about confidence interval distribution in 
+  `report()`.
+
 # report 0.5.1
 
 * Hotfix release to fix failing tests and to unarchive package on CRAN.
@@ -45,14 +64,13 @@ MAJOR CHANGES
 * Reporting participant's sex/gender information has improved (thanks to
   @drfeinberg, #212)
 
-- Separated sex and gender into different searches/columns
+    - Separated sex and gender into different searches/columns
 
-- Sex is reported % female, % male, % other, % missing if any cases are missing
+    - Sex is reported % female, % male, % other, % missing if any cases are missing
 
-- Gender is reported % Women, % Men, % Non-Binary, % missing if any cases are
-  missing
+    - Gender is reported % Women, % Men, % Non-Binary, % missing if any cases are missing
 
-- Age reports % missing if any cases are missing.
+    - Age reports % missing if any cases are missing.
 
 # report 0.4.0
 

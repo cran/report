@@ -58,10 +58,7 @@ report_text <- function(x, table = NULL, ...) {
 }
 
 
-
-
 # METHODS -----------------------------------------------------------------
-
 
 #' @rdname as.report
 #' @export
@@ -84,14 +81,12 @@ as.report_text.default <- function(x, summary = NULL, ...) {
 as.report_text.report <- function(x, summary = NULL, ...) {
   class(x) <- class(x)[class(x) != "report"]
 
-  if (is.null(summary) | isFALSE(summary)) {
+  if (is.null(summary) || isFALSE(summary)) {
     x
   } else if (isTRUE(summary)) {
     summary(x)
   }
 }
-
-
 
 
 #' @export
@@ -105,6 +100,6 @@ summary.report_text <- function(object, ...) {
 
 #' @export
 print.report_text <- function(x, width = NULL, ...) {
-  x <- format_text(as.character(x), width = width, ...)
+  x <- datawizard::format_text(as.character(x), width = width, ...)
   cat(x)
 }

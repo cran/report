@@ -39,11 +39,11 @@ report.lavaan <- function(x, ...) {
 
 #' @export
 report_table.lavaan <- function(x, ...) {
-  parameters <- parameters::model_parameters(x, ...)
+  parameters <- parameters::model_parameters(x, ci_random = FALSE, ...)
   table <- as.data.frame(parameters)
   table$Parameter <- paste(table$To, table$Operator, table$From)
-  table <- data_remove(table, c("To", "Operator", "From"))
-  table <- data_reorder(table, "Parameter")
+  table <- datawizard::data_remove(table, c("To", "Operator", "From"))
+  table <- datawizard::data_reorder(table, "Parameter")
 
   # Combine -----
   # Add performance
@@ -55,8 +55,11 @@ report_table.lavaan <- function(x, ...) {
   # Rename some columns
 
   # Shorten ----
-  table_full <- data_remove(table, "SE")
-  table <- data_remove(table_full, data_findcols(table_full, ends_with = c("_CI_low|_CI_high")))
+  table_full <- datawizard::data_remove(table, "SE")
+  table <- datawizard::data_remove(
+    table_full,
+    datawizard::data_find(table_full, select = "(_CI_low|_CI_high)$", regex = TRUE)
+  )
   table <- table[!table$Parameter %in% c(
     "AIC", "BIC",
     "RMSEA"
@@ -82,7 +85,7 @@ report_table.lavaan <- function(x, ...) {
 #' @rdname report.lavaan
 #' @export
 report_performance.lavaan <- function(x, table = NULL, ...) {
-  if (!is.null(table) | is.null(attributes(table)$performance)) {
+  if (!is.null(table) || is.null(attributes(table)$performance)) {
     table <- report_table(x, ...)
   }
   performance <- attributes(table)$performance
@@ -108,8 +111,8 @@ report_performance.lavaan <- function(x, table = NULL, ...) {
   }
 
   perf_table <- effectsize::interpret(performance)
-  text_full <- text_paste(text_chi2, .text_performance_lavaan(perf_table), sep = " ")
-  text <- text_paste(text_chi2, .text_performance_lavaan(perf_table[perf_table$Name %in% c("RMSEA", "CFI", "SRMR"), ]), sep = " ")
+  text_full <- datawizard::text_paste(text_chi2, .text_performance_lavaan(perf_table), sep = " ")
+  text <- datawizard::text_paste(text_chi2, .text_performance_lavaan(perf_table[perf_table$Name %in% c("RMSEA", "CFI", "SRMR"), ]), sep = " ")
 
 
   as.report_performance(text_full, summary = text)

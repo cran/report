@@ -14,6 +14,19 @@
 
 <title>Supporting New Models</title>
 
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
 
 <style type="text/css">
   code{white-space: pre-wrap;}
@@ -23,6 +36,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 
@@ -226,18 +240,25 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 
 <div id="TOC">
 <ul>
-<li><a href="#open-an-issue-on-github">1. Open an Issue on GitHub</a></li>
-<li><a href="#use-template-file">2. Use template file</a></li>
+<li><a href="#open-an-issue-on-github" id="toc-open-an-issue-on-github">1. Open an Issue on GitHub</a></li>
+<li><a href="#use-template-file" id="toc-use-template-file">2. Use
+template file</a></li>
 </ul>
 </div>
 
 <div id="open-an-issue-on-github" class="section level2">
 <h2>1. Open an Issue on GitHub</h2>
-<p>If there is a model that you would like to report but is not currently supported in <code>report</code>, you can suggest it to us. You can do so by opening an issue on <a href="https://github.com/easystats/report/issues">https://github.com/easystats/report/issues</a>, and saying what would you like to see, and how you can eventually help out (e.g., you can help us test the new functionality).</p>
+<p>If there is a model that you would like to report but is not
+currently supported in <code>report</code>, you can suggest it to us.
+You can do so by opening an issue on <a href="https://github.com/easystats/report/issues">https://github.com/easystats/report/issues</a>,
+and saying what would you like to see, and how you can eventually help
+out (e.g., you can help us test the new functionality).</p>
 </div>
 <div id="use-template-file" class="section level2">
 <h2>2. Use template file</h2>
-<p>Copy and paste the <a href="https://github.com/easystats/report/blob/master/R/report.default.R"><strong>template file</strong></a>, and replace the function with the one you would like to see supported.</p>
+<p>Copy and paste the <a href="https://github.com/easystats/report/blob/master/R/report.default.R"><strong>template
+file</strong></a>, and replace the function with the one you would like
+to see supported.</p>
 </div>
 
 

@@ -54,7 +54,6 @@ report.data.frame <- function(x,
                               n_entries = 3,
                               missing_percentage = "auto",
                               ...) {
-
   # remove list columns
   if (.has_groups(x) && !inherits(x, "tbl_df")) {
     x <- .groups_set(
@@ -119,7 +118,7 @@ report_table.data.frame <- function(x,
   table_full <- data.frame()
   table <- data.frame()
 
-  for (i in 1:ncol(x)) {
+  for (i in seq_len(ncol(x))) {
     col <- names(x)[i]
     current_table_full <- report_table(
       x[[col]],
@@ -158,15 +157,15 @@ report_table.data.frame <- function(x,
 
   if ("Level" %in% names(table)) {
     if ("percentage_Obs" %in% names(table)) {
-      table <- data_reorder(table, c("Variable", "Level", "n_Obs", "percentage_Obs"))
-      table_full <- data_reorder(table_full, c("Variable", "Level", "n_Obs", "percentage_Obs"))
+      table <- datawizard::data_reorder(table, c("Variable", "Level", "n_Obs", "percentage_Obs"), verbose = FALSE)
+      table_full <- datawizard::data_reorder(table_full, c("Variable", "Level", "n_Obs", "percentage_Obs"), verbose = FALSE)
     } else {
-      table <- data_reorder(table, c("Variable", "Level", "n_Obs"))
-      table_full <- data_reorder(table_full, c("Variable", "Level", "n_Obs"))
+      table <- datawizard::data_reorder(table, c("Variable", "Level", "n_Obs"), verbose = FALSE)
+      table_full <- datawizard::data_reorder(table_full, c("Variable", "Level", "n_Obs"), verbose = FALSE)
     }
   } else {
-    table <- data_reorder(table, c("Variable", "n_Obs"))
-    table_full <- data_reorder(table_full, c("Variable", "n_Obs"))
+    table <- datawizard::data_reorder(table, c("Variable", "n_Obs"), verbose = FALSE)
+    table_full <- datawizard::data_reorder(table_full, c("Variable", "n_Obs"), verbose = FALSE)
   }
 
   # Reorder cols
@@ -201,7 +200,7 @@ report_parameters.data.frame <- function(x,
   text_full <- c()
   text <- c()
 
-  for (i in 1:ncol(x)) {
+  for (i in seq_len(ncol(x))) {
     r <- report_text(
       x[[names(x)[i]]],
       n = n,
@@ -283,7 +282,7 @@ report_statistics.data.frame <- function(x,
   text_full <- c()
   text <- c()
 
-  for (i in 1:ncol(x)) {
+  for (i in seq_len(ncol(x))) {
     r <- report_statistics(
       x[[names(x)[i]]],
       n = n,
@@ -327,7 +326,7 @@ report_statistics.data.frame <- function(x,
   )
 
   for (group in names(dfs)) {
-    dfs[[group]] <- data_remove(dfs[[group]], groups)
+    dfs[[group]] <- datawizard::data_remove(dfs[[group]], groups)
   }
 
   list(dfs = dfs, intro = intro)
@@ -378,8 +377,8 @@ report_table.grouped_df <- function(x,
     table <- merge(table, current_table, all = TRUE, sort = FALSE)
   }
 
-  table <- data_reorder(table, "Group")
-  table_full <- data_reorder(table_full, "Group")
+  table <- datawizard::data_reorder(table, "Group")
+  table_full <- datawizard::data_reorder(table_full, "Group")
 
   as.report_table(table_full, summary = table)
 }

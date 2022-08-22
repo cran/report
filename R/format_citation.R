@@ -38,8 +38,8 @@ format_citation <- function(citation,
 
   if (isTRUE(short)) {
     n_authors <- sapply(regmatches(citation, gregexpr(",", citation, fixed = TRUE)), length)
-    for (i in 1:length(n_authors)) {
-      if (n_authors[i] > 1 | grepl("&", citation[i])) {
+    for (i in seq_along(n_authors)) {
+      if (n_authors[i] > 1 || grepl("&", citation[i])) {
         citation[i] <- trimws(gsub(",.*\\(", " et al. (", citation[i])) # Replace remaining authors by et al.
       }
     }
@@ -65,8 +65,10 @@ cite_citation <- function(citation) {
 #' @rdname format_citation
 #' @export
 clean_citation <- function(citation) {
-  if ("citation" %in% class(citation)) {
-    citation <- format(citation)[2]
+  if (isTRUE(inherits(citation, "citation"))) {
+    citation <- format(citation,
+      style = "text"
+    )
   }
   citation <- unlist(strsplit(citation, "\n"))
   citation <- paste(citation, collapse = "SPLIT")

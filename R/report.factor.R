@@ -33,7 +33,7 @@ report_table.factor <- function(x, levels_percentage = "auto", ...) {
   # Shorten
   table <- table_full
   if (levels_percentage == FALSE) {
-    table <- data_remove(table, "percentage_Obs")
+    table <- datawizard::data_remove(table, "percentage_Obs")
   }
 
   as.report_table(table_full, summary = table)
@@ -107,8 +107,8 @@ report_text.factor <- function(x, table = NULL, levels_percentage = "auto", ...)
     text_total_levels <- paste0(name, ": ", nrow(table_no_missing), " level, namely ")
   }
 
-  text_full <- paste0(text_total_levels, format_text(params, sep = ", ", ...))
-  text <- paste0(text_total_levels, format_text(summary(params), sep = ", ", ...))
+  text_full <- paste0(text_total_levels, datawizard::text_concatenate(params, sep = ", "))
+  text <- paste0(text_total_levels, datawizard::text_concatenate(summary(params), sep = ", "))
 
   as.report_text(text_full, summary = text)
 }

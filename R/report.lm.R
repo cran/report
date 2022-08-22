@@ -133,7 +133,7 @@ report_effectsize.lm <- function(x, effectsize_method = "refit", ...) {
 #' @include utils_combine_tables.R
 #' @export
 report_table.lm <- function(x, include_effectsize = TRUE, ...) {
-  params <- parameters::model_parameters(x, ...)
+  params <- parameters::model_parameters(x, ci_random = FALSE, ...)
 
   # Combine -----
   # Add effectsize
@@ -160,10 +160,14 @@ report_table.lm <- function(x, include_effectsize = TRUE, ...) {
 
   # Shorten ----
   if (insight::model_info(x)$is_logit) {
-    params <- data_remove(params, "df_error")
+    params <- datawizard::data_remove(params, "df_error")
   }
-  table_full <- data_remove(params, "SE")
-  table <- data_remove(table_full, data_findcols(table_full, ends_with = c("_CI_low|_CI_high")))
+  table_full <- datawizard::data_remove(params, "SE")
+  table <- datawizard::data_remove(
+    table_full,
+    datawizard::data_find(table_full, select = "(_CI_low|_CI_high)$", regex = TRUE, verbose = FALSE),
+    verbose = FALSE
+  )
   table <- table[!table$Parameter %in% c("AIC", "BIC", "ELPD", "LOOIC", "WAIC"), ]
 
   # Prepare -----
@@ -175,7 +179,7 @@ report_table.lm <- function(x, include_effectsize = TRUE, ...) {
   )
   if (!is.null(effsize)) attr(out, paste0(names(attributes(effsize)$ci))) <- attributes(effsize)$ci
   # Add attributes from params table
-  for (att in c("ci", "coefficient_name", "pretty_names", "bootstrap", "iterations", "df_method")) {
+  for (att in c("ci", "coefficient_name", "pretty_names", "bootstrap", "iterations", "ci_method")) {
     attr(out, att) <- attributes(params)[[att]]
   }
 
@@ -200,7 +204,7 @@ report_statistics.lm <- function(x,
 
   # Estimate
   estimate <- .find_regression_estimate(table)
-  if (is.na(estimate) | is.null(estimate) | !estimate %in% names(table)) {
+  if (is.null(estimate) || is.na(estimate) || !estimate %in% names(table)) {
     text <- ""
   } else if (estimate == "Coefficient") {
     text <- paste0("beta = ", insight::format_value(table[[estimate]]))
@@ -210,38 +214,41 @@ report_statistics.lm <- function(x,
 
   # CI
   if (!is.null(table$CI_low)) {
-    text <- text_paste(text, insight::format_ci(table$CI_low, table$CI_high, ci = attributes(table)$ci))
+    text <- datawizard::text_paste(text, insight::format_ci(table$CI_low, table$CI_high, ci = attributes(table)$ci))
   }
 
   # Statistic
   if ("t" %in% names(table)) {
-    text <- text_paste(text, paste0("t(", insight::format_value(table$df, protect_integers = TRUE), ") = ", insight::format_value(table$t)))
+    text <- datawizard::text_paste(
+      text,
+      paste0("t(", insight::format_value(table$df, protect_integers = TRUE), ") = ", insight::format_value(table$t))
+    )
   }
 
   # p-value
   if ("p" %in% names(table)) {
-    text <- text_paste(text, insight::format_p(table$p, stars = FALSE, digits = "apa"))
+    text <- datawizard::text_paste(text, insight::format_p(table$p, stars = FALSE, digits = "apa"))
   }
 
   # pd
   if ("pd" %in% names(table)) {
-    text <- text_paste(text, insight::format_pd(table$pd, stars = FALSE))
+    text <- datawizard::text_paste(text, insight::format_pd(table$pd, stars = FALSE))
   }
 
   # BF
   if ("ROPE_Percentage" %in% names(table)) {
-    text <- text_paste(text, insight::format_rope(table$ROPE_Percentage))
+    text <- datawizard::text_paste(text, insight::format_rope(table$ROPE_Percentage))
   }
 
   # BF
   if ("BF" %in% names(table)) {
-    text <- text_paste(text, insight::format_bf(table$BF, stars = FALSE))
+    text <- datawizard::text_paste(text, insight::format_bf(table$BF, stars = FALSE, exact = TRUE))
   }
 
   # Effect size
   if (include_effectsize && !is.null(effsize)) {
-    text_full <- text_paste(text, attributes(effsize)$statistics, sep = "; ")
-    text <- text_paste(text, attributes(effsize)$main)
+    text_full <- datawizard::text_paste(text, attributes(effsize)$statistics, sep = "; ")
+    text <- datawizard::text_paste(text, attributes(effsize)$main)
   } else {
     text_full <- text
   }
@@ -254,13 +261,13 @@ report_statistics.lm <- function(x,
       text_diagnostic <- paste0("Rhat = ", insight::format_value(table$Rhat))
     }
 
-    text <- text_paste(text, text_diagnostic)
+    text <- datawizard::text_paste(text, text_diagnostic)
 
     if ("ESS" %in% names(table)) {
-      text_diagnostic <- text_paste(text_diagnostic, paste0("ESS = ", insight::format_value(table$ESS)))
+      text_diagnostic <- datawizard::text_paste(text_diagnostic, paste0("ESS = ", insight::format_value(table$ESS)))
     }
 
-    text_full <- text_paste(text_full, text_diagnostic, sep = "; ")
+    text_full <- datawizard::text_paste(text_full, text_diagnostic, sep = "; ")
   }
 
   as.report_statistics(text_full,
@@ -282,7 +289,6 @@ report_parameters.lm <- function(x,
                                  include_effectsize = TRUE,
                                  include_intercept = TRUE,
                                  ...) {
-
   # Get data
   stats <- report_statistics(x, table = table, include_effectsize = include_effectsize, ...)
   params <- attributes(stats)$table
@@ -415,7 +421,7 @@ report_model.lm <- function(x, table = NULL, ...) {
     to_predict_text <- paste0(
       to_predict_text,
       " with ",
-      format_text(insight::find_predictors(x, effects = "fixed", flatten = TRUE))
+      insight::find_predictors(x, effects = "fixed", flatten = TRUE)
     )
   }
 
@@ -447,7 +453,7 @@ report_model.lm <- function(x, table = NULL, ...) {
 #' @rdname report.lm
 #' @export
 report_performance.lm <- function(x, table = NULL, ...) {
-  if (!is.null(table) | is.null(attributes(table)$performance)) {
+  if (!is.null(table) || is.null(attributes(table)$performance)) {
     table <- report_table(x, ...)
   }
   performance <- attributes(table)$performance
@@ -488,8 +494,8 @@ report_info.lm <- function(x,
     att <- attributes(parameters)
   }
 
-  if ("df_method" %in% names(att)) {
-    text <- paste0(text, " ", .info_df(ci = att$ci, df_method = att$df_method))
+  if ("ci_method" %in% names(att)) {
+    text <- paste0(text, " ", .info_df(ci = att$ci, ci_method = att$ci_method, test_statistic = att$test_statistic, bootstrap = att$bootstrap))
   }
 
   # if (!is.null(att$ci_method)) {
@@ -549,12 +555,12 @@ report_text.lm <- function(x, table = NULL, ...) {
 
 #' @keywords internal
 .find_regression_estimate <- function(table, ...) {
-  candidates <- c("^Coefficient", "beta", "Median", "Mean", "MAP")
+  candidates <- "(^Coefficient|beta|Median|Mean|MAP)"
   coefname <- attributes(table)$coefficient_name
   if (!is.null(coefname) && coefname %in% names(table)) {
     estimate <- attributes(table)$coefficient_name
   } else {
-    estimate <- data_findcols(table, candidates)[1]
+    estimate <- datawizard::data_find(table, candidates, regex = TRUE, verbose = FALSE)[1]
   }
   estimate
 }
