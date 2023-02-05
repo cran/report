@@ -12,11 +12,17 @@ options(
   width = 60
 )
 
-if (!requireNamespace("dplyr", quietly = TRUE)) {
+pkgs <- c("dplyr", "lme4")
+successfully_loaded <- vapply(pkgs, requireNamespace, FUN.VALUE = logical(1L), quietly = TRUE)
+can_evaluate <- all(successfully_loaded)
+
+if (can_evaluate) {
+  knitr::opts_chunk$set(eval = TRUE)
+  vapply(pkgs, require, FUN.VALUE = logical(1L), quietly = TRUE, character.only = TRUE)
+} else {
   knitr::opts_chunk$set(eval = FALSE)
 }
 
-library(dplyr, warn.conflicts = FALSE)
 library(report)
 
 ## ----eval=FALSE-------------------------------------------
@@ -35,7 +41,7 @@ iris %>%
   report_table()
 
 ## ---------------------------------------------------------
-report(t.test(formula = wt ~ am, data = mtcars))
+report(t.test(formula = mtcars$wt ~ mtcars$am))
 
 ## ---- eval=FALSE------------------------------------------
 #  report(cor.test(mtcars$mpg, mtcars$wt))

@@ -3,10 +3,11 @@
 #' model <- lm(Sepal.Length ~ Species, data = iris)
 #' format_model(model)
 #'
-#' if (require("lme4")) {
-#'   model <- lme4::lmer(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
-#'   format_model(model)
-#' }
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
+#' # Mixed models
+#' library(lme4)
+#' model <- lme4::lmer(Sepal.Length ~ Sepal.Width + (1 | Species), data = iris)
+#' format_model(model)
 #' @return A character string.
 #' @export
 format_model <- function(x) {
@@ -23,7 +24,7 @@ format_model.default <- function(x) {
     type <- ""
   }
 
-  if ("Mclust" %in% class(x)) {
+  if (inherits(x, "Mclust")) {
     return("Gaussian finite mixture fitted by EM algorithm")
   }
 
@@ -63,7 +64,7 @@ format_model.default <- function(x) {
 
   type <- paste0(type, "model")
 
-  if (grepl("general linear", type)) {
+  if (grepl("general linear", type, fixed = TRUE)) {
     type <- paste0(
       type,
       " (",

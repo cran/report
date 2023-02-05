@@ -9,25 +9,23 @@
 #'
 #' @inherit report return seealso
 #'
-#' @examples
-#' library(report)
+#' @examplesIf requireNamespace("lavaan", quietly = TRUE)
 #' \donttest{
 #' # Structural Equation Models (SEM)
-#' if (require("lavaan") && FALSE) {
-#'   structure <- " ind60 =~ x1 + x2 + x3
-#'                  dem60 =~ y1 + y2 + y3
-#'                  dem60 ~ ind60 "
-#'   model <- lavaan::sem(structure, data = PoliticalDemocracy)
-#'   r <- report(model)
-#'   r
-#'   # summary(r)
-#'   # as.data.frame(r)
-#'   # summary(as.data.frame(r))
+#' library(lavaan)
+#' structure <- "ind60 =~ x1 + x2 + x3
+#'               dem60 =~ y1 + y2 + y3
+#'               dem60 ~ ind60"
+#' model <- lavaan::sem(structure, data = PoliticalDemocracy)
+#' r <- report(model)
+#' r
+#' summary(r)
+#' as.data.frame(r)
+#' summary(as.data.frame(r))
 #'
-#'   # Specific reports
-#'   report_table(model)
-#'   report_performance(model)
-#' }
+#' # Specific reports
+#' suppressWarnings(report_table(model))
+#' suppressWarnings(report_performance(model))
 #' }
 #' @return An object of class [report()].
 #' @export
@@ -73,7 +71,7 @@ report_table.lavaan <- function(x, ...) {
     ...
   )
   # Add attributes from params table
-  for (att in c("ci")) {
+  for (att in "ci") {
     attr(out, att) <- attributes(parameters)[[att]]
   }
 
@@ -94,7 +92,7 @@ report_performance.lavaan <- function(x, table = NULL, ...) {
   text_chi2 <- ""
   if (all(c("p_Chi2", "Chi2", "Chi2_df") %in% names(performance))) {
     sig <- "significantly"
-    if (performance$p_Chi2 > .05) {
+    if (performance$p_Chi2 > 0.05) {
       sig <- "not significantly"
     }
     text_chi2 <- paste0(
@@ -112,7 +110,10 @@ report_performance.lavaan <- function(x, table = NULL, ...) {
 
   perf_table <- effectsize::interpret(performance)
   text_full <- datawizard::text_paste(text_chi2, .text_performance_lavaan(perf_table), sep = " ")
-  text <- datawizard::text_paste(text_chi2, .text_performance_lavaan(perf_table[perf_table$Name %in% c("RMSEA", "CFI", "SRMR"), ]), sep = " ")
+  text <- datawizard::text_paste(text_chi2,
+    .text_performance_lavaan(perf_table[perf_table$Name %in% c("RMSEA", "CFI", "SRMR"), ]),
+    sep = " "
+  )
 
 
   as.report_performance(text_full, summary = text)

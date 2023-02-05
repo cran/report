@@ -1,5 +1,5 @@
 ---
-title: "Get Started"
+title: "Automated Reporting: Getting Started"
 output: 
   rmarkdown::html_vignette:
     toc: true
@@ -7,7 +7,7 @@ output:
     fig_height: 6
 tags: [r, report]
 vignette: >
-  %\VignetteIndexEntry{Get Started}
+  %\VignetteIndexEntry{Automated Reporting: Getting Started}
   \usepackage[utf8]{inputenc}
   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -28,11 +28,17 @@ options(
   width = 60
 )
 
-if (!requireNamespace("dplyr", quietly = TRUE)) {
+pkgs <- c("dplyr", "lme4")
+successfully_loaded <- vapply(pkgs, requireNamespace, FUN.VALUE = logical(1L), quietly = TRUE)
+can_evaluate <- all(successfully_loaded)
+
+if (can_evaluate) {
+  knitr::opts_chunk$set(eval = TRUE)
+  vapply(pkgs, require, FUN.VALUE = logical(1L), quietly = TRUE, character.only = TRUE)
+} else {
   knitr::opts_chunk$set(eval = FALSE)
 }
 
-library(dplyr, warn.conflicts = FALSE)
 library(report)
 ```
 
@@ -88,7 +94,7 @@ iris %>%
 objects from correlation, *t*-tests, Wilcoxon tests, etc.
 
 ```{r}
-report(t.test(formula = wt ~ am, data = mtcars))
+report(t.test(formula = mtcars$wt ~ mtcars$am))
 ```
 
 ```{r, eval=FALSE}

@@ -17,7 +17,8 @@
 #' @param education The name of the column containing education information.
 #' @param country The name of the column containing country information.
 #' @param race The name of the column containing race/ethnicity information.
-#' @param threshold Percentage after which to combine, e.g., countries (default is 10%, so countries that represent less than 10% will be combined in the "other" category).
+#' @param threshold Percentage after which to combine, e.g., countries (default is 10%,
+#' so countries that represent less than 10% will be combined in the "other" category).
 #' @param participants The name of the participants' identifier column (for
 #'   instance in the case of repeated measures).
 #' @param group A character vector indicating the name(s) of the column(s) used
@@ -165,7 +166,8 @@ report_participants <- function(data,
   }
 
   if (!is.null(group)) {
-    text <- c()
+    text <- NULL
+    data[[group]] <- as.character(data[[group]])
     for (i in split(data, data[group])) {
       current_text <- .report_participants(
         i,
@@ -180,7 +182,11 @@ report_participants <- function(data,
         threshold = threshold
       )
 
-      pre_text <- paste0("the '", paste0(names(i[group]), " - ", as.character(sapply(i[group], unique)), collapse = " and "), "' group: ")
+      pre_text <- paste0(
+        "the '",
+        paste0(names(i[group]), " - ", vapply(i[group], unique, "character"), collapse = " and "),
+        "' group: "
+      )
 
       text <- c(text, paste0(pre_text, current_text))
     }
@@ -204,7 +210,26 @@ report_participants <- function(data,
   text
 }
 
+#' @keywords internal
+.check_df_names <- function(data, names) {
+  data[names] <- lapply(names, function(x) {
+    if (is.null(x) || !all(x %in% names(data))) {
+      NA
+    } else {
+      data[[x]]
+    }
+  })
+  data
+}
 
+#' @keywords internal
+.replace_names <- function(data, x) {
+  if (is.null(x) || !all(x %in% names(data))) {
+    tools::toTitleCase(deparse(substitute(x)))
+  } else {
+    x
+  }
+}
 
 #' @keywords internal
 .report_participants <- function(data,
@@ -220,30 +245,15 @@ report_participants <- function(data,
                                  threshold = 10,
                                  ...) {
   # Sanity checks
-  if (is.null(age) || !age %in% names(data)) {
-    data$Age <- NA
-    age <- "Age"
-  }
-  if (is.null(sex) || !sex %in% names(data)) {
-    data$Sex <- NA
-    sex <- "Sex"
-  }
-  if (is.null(gender) || !gender %in% names(data)) {
-    data$Gender <- NA
-    gender <- "Gender"
-  }
-  if (is.null(education) || !education %in% names(data)) {
-    data$Education <- NA
-    education <- "Education"
-  }
-  if (is.null(country) || !country %in% names(data)) {
-    data$Country <- NA
-    country <- "Country"
-  }
-  if (is.null(race) || !race %in% names(data)) {
-    data$Race <- NA
-    race <- "Race"
-  }
+  demo.names <- c("Age", "Sex", "Gender", "Education", "Country", "Race")
+  data <- .check_df_names(data, names = demo.names)
+
+  age <- .replace_names(data, age)
+  sex <- .replace_names(data, sex)
+  gender <- .replace_names(data, gender)
+  education <- .replace_names(data, education)
+  country <- .replace_names(data, country)
+  race <- .replace_names(data, race)
 
   # Grouped data
   if (!is.null(participants)) {
@@ -392,6 +402,7 @@ report_participants <- function(data,
   text_country <- if (all(is.na(data[[country]]))) {
     ""
   } else {
+    data[[country]] <- as.character(data[[country]])
     data[which(data[[country]] %in% c(NA, "NA")), country] <- "missing"
     frequency.table <- as.data.frame(datawizard::data_tabulate(data[[country]]))[c(2, 4)]
     names(frequency.table)[2] <- "Percent"
@@ -400,7 +411,7 @@ report_participants <- function(data,
     upper <- frequency.table[which(frequency.table$Percent >= threshold), ]
     lower <- frequency.table[which(frequency.table$Percent < threshold), ]
     if (nrow(lower) > 0) {
-      lower.sum <- data.frame(Value = "other", Percent = sum(lower$Percent))
+      lower.sum <- data.frame(Value = "other", Percent = sum(lower$Percent), stringsAsFactors = FALSE)
       combined <- rbind(upper, lower.sum)
     } else {
       combined <- upper
@@ -413,6 +424,7 @@ report_participants <- function(data,
   text_race <- if (all(is.na(data[[race]]))) {
     ""
   } else {
+    data[[race]] <- as.character(data[[race]])
     data[which(data[[race]] %in% c(NA, "NA")), race] <- "missing"
     frequency.table <- as.data.frame(datawizard::data_tabulate(data[[race]]))[c(2, 4)]
     names(frequency.table)[2] <- "Percent"
@@ -421,7 +433,7 @@ report_participants <- function(data,
     upper <- frequency.table[which(frequency.table$Percent >= threshold), ]
     lower <- frequency.table[which(frequency.table$Percent < threshold), ]
     if (nrow(lower) > 0) {
-      lower.sum <- data.frame(Value = "other", Percent = sum(lower$Percent))
+      lower.sum <- data.frame(Value = "other", Percent = sum(lower$Percent), stringsAsFactors = FALSE)
       combined <- rbind(upper, lower.sum)
     } else {
       combined <- upper
@@ -462,9 +474,9 @@ report_participants <- function(data,
     "Age"
   } else if ("age" %in% colnames(data)) {
     "age"
-  } else if (any(grepl("^Age", colnames(data)))) {
+  } else if (any(startsWith("Age", colnames(data)))) {
     grep("^Age", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^age", colnames(data)))) {
+  } else if (any(startsWith("age", colnames(data)))) {
     grep("^age", colnames(data), value = TRUE)[1]
   } else {
     ""
@@ -477,9 +489,9 @@ report_participants <- function(data,
     "Sex"
   } else if ("sex" %in% colnames(data)) {
     "sex"
-  } else if (any(grepl("^Sex", colnames(data)))) {
+  } else if (any(startsWith("Sex", colnames(data)))) {
     grep("^Sex", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^sex", colnames(data)))) {
+  } else if (any(startsWith("sex", colnames(data)))) {
     grep("^sex", colnames(data), value = TRUE)[1]
   } else {
     ""
@@ -492,9 +504,9 @@ report_participants <- function(data,
     "Gender"
   } else if ("gender" %in% colnames(data)) {
     "gender"
-  } else if (any(grepl("^Gender", colnames(data)))) {
+  } else if (any(startsWith("Gender", colnames(data)))) {
     grep("^Gender", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^gender", colnames(data)))) {
+  } else if (any(startsWith("gender", colnames(data)))) {
     grep("^gender", colnames(data), value = TRUE)[1]
   } else {
     ""
@@ -507,13 +519,13 @@ report_participants <- function(data,
     "Education"
   } else if ("education" %in% colnames(data)) {
     "education"
-  } else if (any(grepl("^Education", colnames(data)))) {
+  } else if (any(startsWith("Education", colnames(data)))) {
     grep("^Education", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^education", colnames(data)))) {
+  } else if (any(startsWith("education", colnames(data)))) {
     grep("^education", colnames(data), value = TRUE)[1]
   } else if ("isced" %in% colnames(data)) {
     "isced"
-  } else if (any(grepl("^isced", colnames(data)))) {
+  } else if (any(startsWith("isced", colnames(data)))) {
     grep("^isced", colnames(data), value = TRUE)[1]
   } else {
     ""
@@ -526,9 +538,9 @@ report_participants <- function(data,
     "Country"
   } else if ("country" %in% colnames(data)) {
     "country"
-  } else if (any(grepl("^Country", colnames(data)))) {
+  } else if (any(startsWith("Country", colnames(data)))) {
     grep("^Country", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^country", colnames(data)))) {
+  } else if (any(startsWith("country", colnames(data)))) {
     grep("^country", colnames(data), value = TRUE)[1]
   } else {
     ""
@@ -541,9 +553,9 @@ report_participants <- function(data,
     "Race"
   } else if ("race" %in% colnames(data)) {
     "race"
-  } else if (any(grepl("^Race", colnames(data)))) {
+  } else if (any(startsWith("Race", colnames(data)))) {
     grep("^Race", colnames(data), value = TRUE)[1]
-  } else if (any(grepl("^race", colnames(data)))) {
+  } else if (any(startsWith("race", colnames(data)))) {
     grep("^race", colnames(data), value = TRUE)[1]
   } else {
     ""

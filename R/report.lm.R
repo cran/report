@@ -36,16 +36,18 @@
 #' summary(r)
 #' as.data.frame(r)
 #' summary(as.data.frame(r))
-#'
-#' # Mixed models
-#' if (require("lme4")) {
-#'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
-#'   r <- report(model)
-#'   r
-#'   summary(r)
-#'   as.data.frame(r)
-#'   summary(as.data.frame(r))
 #' }
+#'
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
+#' \donttest{
+#' # Mixed models
+#' library(lme4)
+#' model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
+#' r <- report(model)
+#' r
+#' summary(r)
+#' as.data.frame(r)
+#' summary(as.data.frame(r))
 #' }
 #' @return An object of class [report()].
 #' @export
@@ -165,7 +167,8 @@ report_table.lm <- function(x, include_effectsize = TRUE, ...) {
   table_full <- datawizard::data_remove(params, "SE")
   table <- datawizard::data_remove(
     table_full,
-    datawizard::data_find(table_full, select = "(_CI_low|_CI_high)$", regex = TRUE, verbose = FALSE),
+    select = "(_CI_low|_CI_high)$",
+    regex = TRUE,
     verbose = FALSE
   )
   table <- table[!table$Parameter %in% c("AIC", "BIC", "ELPD", "LOOIC", "WAIC"), ]
@@ -301,7 +304,7 @@ report_parameters.lm <- function(x,
   text <- paste0(
     text,
     " is statistically ",
-    effectsize::interpret_p(params$p, rules = effectsize::rules(c(0.05), c("significant", "non-significant"))),
+    effectsize::interpret_p(params$p, rules = effectsize::rules(0.05, c("significant", "non-significant"))),
     " and ",
     effectsize::interpret_direction(params$Coefficient)
   )
@@ -421,7 +424,7 @@ report_model.lm <- function(x, table = NULL, ...) {
     to_predict_text <- paste0(
       to_predict_text,
       " with ",
-      insight::find_predictors(x, effects = "fixed", flatten = TRUE)
+      datawizard::text_concatenate(insight::find_predictors(x, effects = "fixed", flatten = TRUE))
     )
   }
 
@@ -495,7 +498,12 @@ report_info.lm <- function(x,
   }
 
   if ("ci_method" %in% names(att)) {
-    text <- paste0(text, " ", .info_df(ci = att$ci, ci_method = att$ci_method, test_statistic = att$test_statistic, bootstrap = att$bootstrap))
+    text <- paste0(text, " ", .info_df(
+      ci = att$ci,
+      ci_method = att$ci_method,
+      test_statistic = att$test_statistic,
+      bootstrap = att$bootstrap
+    ))
   }
 
   # if (!is.null(att$ci_method)) {

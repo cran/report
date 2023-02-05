@@ -17,7 +17,6 @@ if (!requireNamespace("dplyr", quietly = TRUE)) {
 
 ## ---- results='asis'--------------------------------------
 library(report)
-library(dplyr)
 
 cite_packages()
 

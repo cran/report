@@ -17,18 +17,22 @@
 #' # GLMs
 #' report_intercept(lm(Sepal.Length ~ Species, data = iris))
 #' report_intercept(glm(vs ~ disp, data = mtcars, family = "binomial"))
+#' }
 #'
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
+#' \donttest{
 #' # Mixed models
-#' if (require("lme4")) {
-#'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
-#'   report_intercept(model)
+#' library(lme4)
+#' model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
+#' report_intercept(model)
 #' }
 #'
+#' @examplesIf requireNamespace("rstanarm", quietly = TRUE)
+#' \donttest{
 #' # Bayesian models
-#' if (require("rstanarm")) {
-#'   model <- stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600)
-#'   report_intercept(model)
-#' }
+#' library(rstanarm)
+#' model <- suppressWarnings(stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600))
+#' report_intercept(model)
 #' }
 #' @export
 
@@ -79,7 +83,7 @@ print.report_intercept <- function(x, ...) {
   terms <- insight::find_variables(model)$conditional
   model_data <- insight::get_data(model)
   data <- model_data[terms[terms %in% names(model_data)]]
-  text <- c()
+  text <- NULL
   for (col in names(data)) {
     if (is.numeric(data[[col]])) {
       text <- c(text, paste0(col, " = 0"))
@@ -91,7 +95,7 @@ print.report_intercept <- function(x, ...) {
       text <- c(text, paste0(col, " = [?]"))
     }
   }
-  paste0(", corresponding to ", text, ",")
+  paste0(", corresponding to ", datawizard::text_concatenate(text), ",")
 }
 
 

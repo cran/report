@@ -19,7 +19,12 @@
 #' summary(as.data.frame(r))
 #' @return An object of class [report()].
 #' @export
-report.aov <- report.htest
+report.aov <- function(x, ...) {
+  table <- report_table(x, ...)
+  text <- report_text(x, table = table, ...)
+
+  as.report(text, table = table, ...)
+}
 
 #' @export
 report.anova <- report.aov
@@ -34,7 +39,7 @@ report.aovlist <- report.aov
 #' @rdname report.aov
 #' @export
 report_effectsize.aov <- function(x, ...) {
-  table <- suppressMessages(effectsize::effectsize(x, include_intercept = TRUE, ...))
+  table <- suppressMessages(effectsize::effectsize(x, include_intercept = FALSE, ...))
   estimate <- names(table)[effectsize::is_effectsize_name(names(table))]
 
   if (estimate == "Eta2_partial") {
@@ -221,11 +226,11 @@ report_parameters.aov <- function(x, ...) {
   params <- table[table$Parameter != "Residuals", ]
 
   # Text parameters
-  text <- sapply(
+  text <- vapply(
     params$Parameter,
     .format_parameters_aov,
-    simplify = TRUE,
-    USE.NAMES = FALSE
+    USE.NAMES = FALSE,
+    "string"
   )
 
   # Significance
@@ -272,7 +277,7 @@ report_model.aov <- function(x, table = NULL, ...) {
     text <- "ANOVA"
   }
 
-  if ("anova" %in% class(x)) {
+  if (inherits(x, "anova")) {
     text_full <- text # Because anova() does not save the formula.
   } else {
     text_full <- paste0(
@@ -299,7 +304,12 @@ report_model.aovlist <- report_model.aov
 #' @rdname report.aov
 #' @include report.htest.R
 #' @export
-report_info.aov <- report_info.htest
+report_info.aov <- function(x, effectsize = NULL, ...) {
+  if (is.null(effectsize)) {
+    effectsize <- report_effectsize(x, ...)
+  }
+  as.report_info(attributes(effectsize)$rules)
+}
 
 #' @export
 report_info.anova <- report_info.aov

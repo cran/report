@@ -3,40 +3,43 @@ test_that("report_participants", {
     "Age" = c(22, 22, 54, 54, 8, 8),
     "Sex" = c("F", "F", "M", "M", "I", "I"),
     "Gender" = c("W", "W", "M", "M", "N", "N"),
-    "Participant" = c("S1", "S1", "s2", "s2", "s3", "s3")
+    "Participant" = c("S1", "S1", "s2", "s2", "s3", "s3"),
+    stringsAsFactors = FALSE
   )
 
-  expect_equal(
-    report_participants(data, age = "Age", sex = "Sex", participant = "Participant"),
-    "3 participants (Mean age = 28.0, SD = 23.6, range: [8, 54]; Sex: 33.3% females, 33.3% males, 33.3% other; Gender: 33.3% women, 33.3% men, 33.33% non-binary)"
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data, age = "Age", sex = "Sex", participant = "Participant")
+  )
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data, participant = "Participant", spell_n = TRUE)
   )
 
-  expect_equal(nchar(report_participants(data, participant = "Participant", spell_n = TRUE)), 160)
-  expect_equal(
-    report_participants(data, participant = "Participant", spell_n = TRUE),
-    "Three participants (Mean age = 28.0, SD = 23.6, range: [8, 54]; Sex: 33.3% females, 33.3% males, 33.3% other; Gender: 33.3% women, 33.3% men, 33.33% non-binary)"
-  )
+  expect_equal(nchar(report_participants(data, participant = "Participant", spell_n = TRUE)), 160, ignore_attr = TRUE)
 
   data2 <- data.frame(
     "Age" = c(22, 22, 54, 54, 8, 8),
     "Sex" = c("F", "F", "M", "O", "F", "O"),
-    "Gender" = c("W", "W", "M", "O", "W", "O")
+    "Gender" = c("W", "W", "M", "O", "W", "O"),
+    stringsAsFactors = FALSE
   )
 
-  expect_equal(
-    report_participants(data2),
-    "6 participants (Mean age = 28.0, SD = 21.1, range: [8, 54]; Sex: 50.0% females, 16.7% males, 33.3% other; Gender: 50.0% women, 16.7% men, 33.33% non-binary)"
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data2)
   )
 
   data3 <- data.frame(
     "Age" = c(22, 82, NA, NA, NA, NA),
     "Sex" = c("F", "F", "", "", "NA", NA),
-    "Gender" = c("W", "W", "", "", "NA", NA)
+    "Gender" = c("W", "W", "", "", "NA", NA),
+    stringsAsFactors = FALSE
   )
 
-  expect_equal(
-    report_participants(data3),
-    "6 participants (Mean age = 52.0, SD = 42.4, range: [22, 82], 66.7% missing; Sex: 33.3% females, 0.0% males, 0.0% other, 66.67% missing; Gender: 33.3% women, 0.0% men, 0.00% non-binary, 66.67% missing)"
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data3)
   )
 
   # Add tests for education, country, race
@@ -44,21 +47,48 @@ test_that("report_participants", {
     "Education" = c(0, 8, -3, -5, 3, 5, NA),
     "Education2" = c("Bachelor", "PhD", "Highschool", "Highschool", "Bachelor", "Bachelor", NA),
     "Country" = c("USA", "Canada", "Canada", "India", "Germany", "USA", NA),
-    "Race" = c("Black", NA, "White", "Asian", "Black", "Black", "White")
+    "Race" = c("Black", NA, "White", "Asian", "Black", "Black", "White"),
+    stringsAsFactors = FALSE
   )
 
-  expect_equal(
-    report_participants(data4),
-    "7 participants (Mean education = 1.3, SD = 4.9, range: [-5, 8]; Country: 28.57% Canada, 28.57% USA, 14.29% Germany, 14.29% India, 14.29% missing; Race: 42.86% Black, 28.57% White, 14.29% Asian, 14.29% missing)"
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data4)
+  )
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data4, education = "Education2")
+  )
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data4, threshold = 15)
+  )
+})
+
+test_that("report_participants test NAs no warning", {
+  data <- data.frame(
+    "Age" = c(22, 23, 54, 21, 8, 42),
+    "Sex" = (c("Intersex", "F", "M", "M", "NA", NA)),
+    "Gender" = (c("N", "W", "W", "M", "NA", NA)),
+    "Country" = (c("USA", NA, "Canada", "Canada", "India", "Germany")),
+    "Education" = factor(c(0, 8, -3, -5, 3, 5)),
+    "Race" = c(LETTERS[1:5], NA)
+  )
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data)
   )
 
-  expect_equal(
-    report_participants(data4, education = "Education2"),
-    "7 participants (Education: Bachelor, 42.86%; Highschool, 28.57%; PhD, 14.29%; missing, 14.29%; Country: 28.57% Canada, 28.57% USA, 14.29% Germany, 14.29% India, 14.29% missing; Race: 42.86% Black, 28.57% White, 14.29% Asian, 14.29% missing)"
+  data <- data.frame(
+    "Age" = factor(c(22, 23, 54, 21, 8, 42)),
+    "Sex" = factor(c("Intersex", "F", "M", "M", "NA", NA)),
+    "Gender" = factor(c("N", "W", "W", "M", "NA", NA)),
+    "Country" = factor(c("USA", NA, "Canada", "Canada", "India", "Germany")),
+    "Education" = factor(c(0, 8, -3, -5, 3, 5)),
+    "Race" = factor(c(LETTERS[1:5], NA))
   )
-
-  expect_equal(
-    report_participants(data4, threshold = 15),
-    "7 participants (Mean education = 1.3, SD = 4.9, range: [-5, 8]; Country: 28.57% Canada, 28.57% USA, 42.86% other; Race: 42.86% Black, 28.57% White, 28.57% other)"
+  expect_snapshot(
+    variant = "windows",
+    report_participants(data, age = "Age", sex = "Sex")
   )
 })

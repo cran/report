@@ -9,29 +9,24 @@
 #' @inheritParams effectsize::interpret_bf
 #' @inherit report return seealso
 #'
-#' @examples
-#' library(report)
-#'
+#' @examplesIf requireNamespace("bayestestR", quietly = TRUE)
+#' library(bayestestR)
+#' # Bayes factor - models
 #' mo0 <- lm(Sepal.Length ~ 1, data = iris)
 #' mo1 <- lm(Sepal.Length ~ Species, data = iris)
 #' mo2 <- lm(Sepal.Length ~ Species + Petal.Length, data = iris)
 #' mo3 <- lm(Sepal.Length ~ Species * Petal.Length, data = iris)
+#' BFmodels <- bayesfactor_models(mo1, mo2, mo3, denominator = mo0)
 #'
-#' if (require("bayestestR")) {
-#'   # Bayes factor - models
-#'   BFmodels <- bayesfactor_models(mo1, mo2, mo3, denominator = mo0)
+#' r <- report(BFmodels)
+#' r
 #'
-#'   r <- report(BFmodels)
-#'   r
-#'   as.data.frame(r)
+#' # Bayes factor - inclusion
+#' inc_bf <- bayesfactor_inclusion(BFmodels, prior_odds = c(1, 2, 3), match_models = TRUE)
 #'
-#'   # Bayes factor - inclusion
-#'   inc_bf <- bayesfactor_inclusion(BFmodels, prior_odds = c(1, 2, 3), match_models = TRUE)
-#'
-#'   r <- report(inc_bf)
-#'   r
-#'   as.data.frame(r)
-#' }
+#' r <- report(inc_bf)
+#' r
+#' as.data.frame(r)
 #' @return An object of class [report()].
 #' @export
 report.bayesfactor_models <- function(x,
@@ -140,17 +135,17 @@ report_text.bayesfactor_models <- function(x,
 
 
   #### text full ####
-  if (grepl("BIC", BF_method)) {
+  if (grepl("BIC", BF_method, fixed = TRUE)) {
     bf_explain <- paste0(
       "Bayes factors were computed using the BIC approximation, ",
       "by which BF10 = exp((BIC0 - BIC1)/2). "
     )
-  } else if (grepl("JZS", BF_method)) {
+  } else if (grepl("JZS", BF_method, fixed = TRUE)) {
     bf_explain <- paste0(
       "Bayes factors were computed with the `BayesFactor` package, ",
       "using JZS priors. "
     )
-  } else if (grepl("bridgesampling", BF_method)) {
+  } else if (grepl("bridgesampling", BF_method, fixed = TRUE)) {
     bf_explain <- paste0(
       "Bayes factors were computed by comparing marginal likelihoods, ",
       "using the `bridgesampling` package. "
@@ -326,7 +321,7 @@ report_text.bayesfactor_inclusion <- function(x,
     } else {
       paste0(
         " (here we used subjective prior odds of ",
-        paste0(priorOdds, collapse = ", "), ")"
+        toString(priorOdds), ")"
       )
     },
     ", it is possible to sum the prior probability of all models that include ",
@@ -385,7 +380,7 @@ report_text.bayesfactor_inclusion <- function(x,
     sprintf("\nAcross %s", ifelse(matched, "matched models only.", "all models.")),
     ifelse(is.null(priorOdds),
       "\nAssuming unifor prior odds.",
-      paste0("\nWith custom prior odds of [", paste0(priorOdds, collapse = ", "), "].")
+      paste0("\nWith custom prior odds of [", toString(priorOdds), "].")
     )
   )
   attr(bf_table, "table_footer") <- footer

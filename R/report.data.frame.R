@@ -20,8 +20,6 @@
 #' @param digits Number of significant digits.
 #'
 #' @examples
-#' library(report)
-#'
 #' r <- report(iris,
 #'   centrality = "median", dispersion = FALSE,
 #'   distribution = TRUE, missing_percentage = TRUE
@@ -31,16 +29,16 @@
 #' as.data.frame(r)
 #' summary(as.data.frame(r))
 #'
+#' @examplesIf requireNamespace("dplyr", quietly = TRUE)
 #' # grouped analysis using `{dplyr}` package
-#' if (require("dplyr")) {
-#'   r <- iris %>%
-#'     group_by(Species) %>%
-#'     report()
-#'   r
-#'   summary(r)
-#'   as.data.frame(r)
-#'   summary(as.data.frame(r))
-#' }
+#' library(dplyr)
+#' r <- iris %>%
+#'   group_by(Species) %>%
+#'   report()
+#' r
+#' summary(r)
+#' as.data.frame(r)
+#' summary(as.data.frame(r))
 #' @return An object of class [report()].
 #' @export
 report.data.frame <- function(x,
@@ -57,12 +55,12 @@ report.data.frame <- function(x,
   # remove list columns
   if (.has_groups(x) && !inherits(x, "tbl_df")) {
     x <- .groups_set(
-      x[, sapply(x, Negate(inherits), what = "list")],
+      x[, vapply(x, Negate(inherits), what = "list", FUN.VALUE = TRUE)],
       groups = .group_vars(x),
       drop = .groups_drop(x)
     )
   } else {
-    x <- x[, sapply(x, Negate(inherits), what = "list")]
+    x <- x[, vapply(x, Negate(inherits), what = "list", FUN.VALUE = TRUE)]
   }
 
   table <-
@@ -158,7 +156,9 @@ report_table.data.frame <- function(x,
   if ("Level" %in% names(table)) {
     if ("percentage_Obs" %in% names(table)) {
       table <- datawizard::data_reorder(table, c("Variable", "Level", "n_Obs", "percentage_Obs"), verbose = FALSE)
-      table_full <- datawizard::data_reorder(table_full, c("Variable", "Level", "n_Obs", "percentage_Obs"), verbose = FALSE)
+      table_full <- datawizard::data_reorder(table_full, c("Variable", "Level", "n_Obs", "percentage_Obs"),
+        verbose = FALSE
+      )
     } else {
       table <- datawizard::data_reorder(table, c("Variable", "Level", "n_Obs"), verbose = FALSE)
       table_full <- datawizard::data_reorder(table_full, c("Variable", "Level", "n_Obs"), verbose = FALSE)
@@ -197,8 +197,8 @@ report_parameters.data.frame <- function(x,
                                          n_entries = 3,
                                          missing_percentage = "auto",
                                          ...) {
-  text_full <- c()
-  text <- c()
+  text_full <- NULL
+  text <- NULL
 
   for (i in seq_len(ncol(x))) {
     r <- report_text(
@@ -255,8 +255,18 @@ report_text.data.frame <- function(x,
   )
 
   # Concatenate text
-  text_full <- paste0("The data contains ", nrow(x), " observations of the following ", ncol(x), " variables:\n\n", as.character(params))
-  text <- paste0("The data contains ", nrow(x), " observations of the following ", ncol(x), " variables:\n\n", as.character(summary(params)))
+  text_full <- paste0(
+    "The data contains ",
+    nrow(x), " observations of the following ",
+    ncol(x), " variables:\n\n",
+    as.character(params)
+  )
+  text <- paste0(
+    "The data contains ",
+    nrow(x), " observations of the following ",
+    ncol(x), " variables:\n\n",
+    as.character(summary(params))
+  )
 
   as.report_text(text_full, summary = text)
 }
@@ -279,8 +289,8 @@ report_statistics.data.frame <- function(x,
                                          n_entries = 3,
                                          missing_percentage = "auto",
                                          ...) {
-  text_full <- c()
-  text <- c()
+  text_full <- NULL
+  text <- NULL
 
   for (i in seq_len(ncol(x))) {
     r <- report_statistics(
@@ -401,8 +411,8 @@ report_parameters.grouped_df <- function(x,
                                          ...) {
   out <- .report_grouped_dataframe(x)
 
-  params_full <- c()
-  params <- c()
+  params_full <- NULL
+  params <- NULL
 
   for (group in names(out$dfs)) {
     data <- out$dfs[[group]]
@@ -444,8 +454,8 @@ report_text.grouped_df <- function(x,
                                    ...) {
   out <- .report_grouped_dataframe(x)
 
-  text_full <- c(out$intro)
-  text <- c(out$intro)
+  text_full <- out$intro
+  text <- out$intro
 
   for (group in names(out$dfs)) {
     data <- out$dfs[[group]]
@@ -493,8 +503,8 @@ report_statistics.grouped_df <- function(x,
                                          ...) {
   out <- .report_grouped_dataframe(x)
 
-  text_full <- c()
-  text <- c()
+  text_full <- NULL
+  text <- NULL
 
   for (group in names(out$dfs)) {
     data <- out$dfs[[group]]
@@ -535,7 +545,7 @@ report_statistics.grouped_df <- function(x,
     return(percentage)
   }
 
-  if (any(c("data.frame", "grouped_df") %in% class(x))) {
+  if (any(inherits(x, c("data.frame", "grouped_df")))) {
     n <- nrow(x)
   } else {
     n <- length(x)

@@ -22,18 +22,21 @@
 #' # GLMs
 #' report_effectsize(lm(Sepal.Length ~ Petal.Length * Species, data = iris))
 #' report_effectsize(glm(vs ~ disp, data = mtcars, family = "binomial"))
+#'
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
 #' \donttest{
 #' # Mixed models
-#' if (require("lme4")) {
-#'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
-#'   report_effectsize(model)
+#' library(lme4)
+#' model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
+#' report_effectsize(model)
 #' }
 #'
+#' @examplesIf requireNamespace("rstanarm", quietly = TRUE)
+#' \donttest{
 #' # Bayesian models
-#' if (require("rstanarm")) {
-#'   model <- stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600)
-#'   report_effectsize(model, effectsize_method = "basic")
-#' }
+#' library(rstanarm)
+#' model <- suppressWarnings(stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600))
+#' report_effectsize(model, effectsize_method = "basic")
 #' }
 #' @export
 report_effectsize <- function(x, ...) {
@@ -90,16 +93,15 @@ print.report_effectsize <- function(x, ...) {
   # Effect size
   if (!is.null(interpretation)) {
     if (is.character(interpretation)) {
-      effsize_name <- ifelse(interpretation == "cohen1988", "Cohen's (1988)",
-        ifelse(interpretation == "sawilowsky2009", "Savilowsky's (2009)",
-          ifelse(interpretation == "gignac2016", "Gignac's (2016)",
-            ifelse(interpretation == "funder2019", "Funder's (2019)",
-              ifelse(interpretation == "chen2010", "Chen's (2010)",
-                ifelse(interpretation == "field2013", "Field's (2013)", interpretation)
-              )
-            )
-          )
-        )
+      effsize_name <- switch(interpretation,
+        "cohen1988" = "Cohen's (1988)",
+        "sawilowsky2009" = "Savilowsky's (2009)",
+        "gignac2016" = "Gignac's (2016)",
+        "funder2019" = "Funder's (2019)",
+        "lovakov2021" = "Lovakov's (2021)",
+        "evans1996" = "Evans's (1996)",
+        "chen2010" = "Chen's (2010)",
+        "field2013" = "Field's (2013)"
       )
       text <- paste0("Effect sizes were labelled following ", effsize_name, " recommendations.")
     } else {
@@ -119,21 +121,27 @@ print.report_effectsize <- function(x, ...) {
   two_sd <- attributes(x)$two_sd
 
   if (method == "refit") {
-    if (robust == TRUE) {
+    if (robust) {
       text <- "(using the median and the MAD, a robust equivalent of the SD) "
     } else {
       text <- ""
     }
-    text <- paste0("Standardized parameters were obtained by fitting the model on a standardized version ", text, "of the dataset.")
+    text <- paste0(
+      "Standardized parameters were obtained by fitting the model on a standardized version ",
+      text, "of the dataset."
+    )
   } else if (method == "2sd") {
-    if (robust == TRUE) {
+    if (robust) {
       text <- "MAD (a median-based equivalent of the SD) "
     } else {
       text <- "SD "
     }
-    text <- paste0("Standardized parameters were obtained by standardizing the data by 2 times the ", text, " (see Gelman, 2008).")
+    text <- paste0(
+      "Standardized parameters were obtained by standardizing the data by 2 times the ",
+      text, " (see Gelman, 2008)."
+    )
   } else if (method %in% c("smart", "basic", "posthoc")) {
-    if (robust == TRUE) {
+    if (robust) {
       text <- "median and the MAD (a median-based equivalent of the SD) of the response variable."
     } else {
       text <- "mean and the SD of the response variable."

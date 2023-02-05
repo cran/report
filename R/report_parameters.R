@@ -35,18 +35,22 @@
 #' report_parameters(lm(Sepal.Length ~ Petal.Length * Species, data = iris))
 #' report_parameters(lm(Petal.Width ~ Species, data = iris), include_intercept = FALSE)
 #' report_parameters(glm(vs ~ disp, data = mtcars, family = "binomial"))
+#' }
 #'
+#' @examplesIf requireNamespace("lme4", quietly = TRUE)
+#' \donttest{
 #' # Mixed models
-#' if (require("lme4")) {
-#'   model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
-#'   report_parameters(model)
+#' library(lme4)
+#' model <- lme4::lmer(Sepal.Length ~ Petal.Length + (1 | Species), data = iris)
+#' report_parameters(model)
 #' }
 #'
+#' @examplesIf requireNamespace("rstanarm", quietly = TRUE)
+#' \donttest{
 #' # Bayesian models
-#' if (require("rstanarm")) {
-#'   model <- stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600)
-#'   report_parameters(model)
-#' }
+#' library(rstanarm)
+#' model <- suppressWarnings(stan_glm(Sepal.Length ~ Species, data = iris, refresh = 0, iter = 600))
+#' report_parameters(model)
 #' }
 #' @export
 report_parameters <- function(x, ...) {
@@ -145,9 +149,9 @@ print.report_parameters <- function(x, ...) {
     pretty_name <- parameters::format_parameters(x)
   }
 
-  text <- sapply(pretty_name,
+  text <- vapply(pretty_name,
     .format_parameters_regression,
-    simplify = TRUE, USE.NAMES = FALSE
+    USE.NAMES = TRUE, "character"
   )
 
   text
@@ -175,42 +179,34 @@ print.report_parameters <- function(x, ...) {
 
     if ("ESS" %in% names(diagnostic)) {
       stability <- effectsize::interpret_ess(diagnostic$ESS, ...)
-      text <- ifelse(stability == "sufficient" & convergence == "converged",
-        paste0(
-          text,
-          " and the indices are reliable (ESS = ",
-          insight::format_value(diagnostic$ESS, digits = 0),
-          ")"
-        ),
-        ifelse(stability == "sufficient" & convergence != "converged",
-          paste0(
-            text,
-            " even though the indices appear as reliable (ESS = ",
-            insight::format_value(diagnostic$ESS, digits = 0),
-            ")"
+      text <- lapply(seq_len(length(stability)), function(x) {
+        y <- switch(EXPR = paste(stability[x] == "sufficient", convergence[x] == "converged"),
+          "TRUE TRUE" = paste0(
+            text, " and the indices are reliable (ESS = ",
+            insight::format_value(diagnostic$ESS, digits = 0), ")"
           ),
-          ifelse(stability != "sufficient" & convergence == "converged",
-            paste0(
-              text,
-              " but the indices are unreliable (ESS = ",
-              insight::format_value(diagnostic$ESS, digits = 0),
-              ")"
-            ),
-            paste0(
-              text,
-              " and the indices are unreliable (ESS = ",
-              insight::format_value(diagnostic$ESS, digits = 0),
-              ")"
-            )
+          "TRUE FALSE" = paste0(
+            text, " even though the indices appear as reliable (ESS = ",
+            insight::format_value(diagnostic$ESS, digits = 0), ")"
+          ),
+          "FALSE TRUE" = paste0(
+            text, " but the indices are unreliable (ESS = ",
+            insight::format_value(diagnostic$ESS, digits = 0), ")"
+          ),
+          "FALSE FALSE" = paste0(
+            text, " and the indices are unreliable (ESS = ",
+            insight::format_value(diagnostic$ESS, digits = 0), ")"
           )
         )
-      )
+        y[[x]]
+      })
+      text <- unlist(text)
     }
   } else {
     text <- ""
   }
 
-  if (only_when_insufficient == FALSE) {
+  if (!only_when_insufficient) {
     text
   } else {
     ifelse(convergence != "converged" | stability != "sufficient", text, "")

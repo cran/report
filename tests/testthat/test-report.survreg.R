@@ -1,14 +1,12 @@
-if (require("testthat") && require("report") && require("survival")) {
-  test_that("report-survreg", {
-    # model
-    set.seed(123)
-    mod_survreg <-
-      survival::survreg(
-        formula = Surv(futime, fustat) ~ ecog.ps + rx,
-        data = ovarian,
-        dist = "logistic"
-      )
+test_that("report-survreg", {
+  skip_if_not_or_load_if_installed("survival")
 
-    expect_snapshot(variant = .Platform$OS.type, report(mod_survreg))
-  })
-}
+  set.seed(123)
+  mod_survreg <- survival::survreg(
+    formula = Surv(futime, fustat) ~ ecog.ps + rx,
+    data = ovarian,
+    dist = "logistic"
+  )
+
+  expect_snapshot(variant = "windows", report(mod_survreg))
+})
