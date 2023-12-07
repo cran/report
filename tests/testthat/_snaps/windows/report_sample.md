@@ -96,15 +96,89 @@
     Output
       # Descriptive Statistics
       
-      Variable                  |          Summary
-      --------------------------------------------
-      Mean Sepal.Length (SD), n | 5.84 (0.83), 150
-      Mean Sepal.Width (SD), n  | 3.06 (0.44), 150
-      Mean Petal.Length (SD), n | 3.76 (1.77), 150
-      Mean Petal.Width (SD), n  | 1.20 (0.76), 150
-      Species [setosa], %       |             33.3
-      Species [versicolor], %   |             33.3
-      Species [virginica], %    |             33.3
+      Variable                   |          Summary
+      ---------------------------------------------
+      Mean Sepal.Length (SD), n  | 5.84 (0.83), 150
+      Mean Sepal.Width (SD), n   | 3.06 (0.44), 150
+      Mean Petal.Length (SD), n  | 3.76 (1.77), 150
+      Mean Petal.Width (SD), n   | 1.20 (0.76), 150
+      Species [setosa], %, n     |         33.3, 50
+      Species [versicolor], %, n |         33.3, 50
+      Species [virginica], %, n  |         33.3, 50
+
+# report_sample CI
+
+    Code
+      report_sample(iris, select = c("Sepal.Length", "Species"), ci = 0.95,
+      ci_method = "wald")
+    Output
+      # Descriptive Statistics
+      
+      Variable                |           Summary
+      -------------------------------------------
+      Mean Sepal.Length (SD)  |       5.84 (0.83)
+      Species [setosa], %     | 33.3 [25.8, 40.9]
+      Species [versicolor], % | 33.3 [25.8, 40.9]
+      Species [virginica], %  | 33.3 [25.8, 40.9]
+
+---
+
+    Code
+      report_sample(iris, select = c("Sepal.Length", "Species"), ci = 0.95,
+      ci_method = "wilson")
+    Output
+      # Descriptive Statistics
+      
+      Variable                |           Summary
+      -------------------------------------------
+      Mean Sepal.Length (SD)  |       5.84 (0.83)
+      Species [setosa], %     | 33.3 [26.3, 41.2]
+      Species [versicolor], % | 33.3 [26.3, 41.2]
+      Species [virginica], %  | 33.3 [26.3, 41.2]
+
+---
+
+    Code
+      report_sample(d, ci = 0.95, select = "x", ci_method = "wald")
+    Output
+      # Descriptive Statistics
+      
+      Variable |        Summary
+      -------------------------
+      x [1], % | 2.9 [1.9, 3.9]
+
+---
+
+    Code
+      report_sample(d, ci = 0.95, select = "x", ci_method = "wilson")
+    Output
+      # Descriptive Statistics
+      
+      Variable |        Summary
+      -------------------------
+      x [1], % | 2.9 [2.0, 4.1]
+
+---
+
+    Code
+      report_sample(d, ci = 0.95, ci_correct = TRUE, select = "x", ci_method = "wald")
+    Output
+      # Descriptive Statistics
+      
+      Variable |        Summary
+      -------------------------
+      x [1], % | 2.9 [1.8, 4.0]
+
+---
+
+    Code
+      report_sample(d, ci = 0.95, ci_correct = TRUE, select = "x", ci_method = "wilson")
+    Output
+      # Descriptive Statistics
+      
+      Variable |        Summary
+      -------------------------
+      x [1], % | 2.9 [2.0, 4.2]
 
 # report_sample group_by
 
@@ -492,4 +566,87 @@
       Species [setosa], %     |              33.3
       Species [versicolor], % |              33.3
       Species [virginica], %  |              33.3
+
+# report_sample weights
+
+    Code
+      report_sample(airquality, weights = "Temp")
+    Output
+      # Descriptive Statistics (weighted)
+      
+      Variable          |        Summary
+      ----------------------------------
+      Mean Ozone (SD)   |  44.91 (33.54)
+      Mean Solar.R (SD) | 188.84 (87.33)
+      Mean Wind (SD)    |    9.76 (3.48)
+      Mean Month (SD)   |    7.07 (1.37)
+      Mean Day (SD)     |   15.66 (8.93)
+
+---
+
+    Code
+      report_sample(mtcars, weights = "carb")
+    Output
+      # Descriptive Statistics (weighted)
+      
+      Variable       |         Summary
+      --------------------------------
+      Mean mpg (SD)  |    18.24 (5.17)
+      Mean cyl (SD)  |     6.71 (1.57)
+      Mean disp (SD) | 257.96 (120.25)
+      Mean hp (SD)   |  175.29 (75.91)
+      Mean drat (SD) |     3.57 (0.48)
+      Mean wt (SD)   |     3.45 (0.95)
+      Mean qsec (SD) |    17.20 (1.76)
+      Mean vs (SD)   |     0.28 (0.45)
+      Mean am (SD)   |     0.42 (0.50)
+      Mean gear (SD) |     3.80 (0.81)
+
+---
+
+    Code
+      report_sample(iris, weights = "Petal.Width")
+    Output
+      # Descriptive Statistics (weighted)
+      
+      Variable                |     Summary
+      -------------------------------------
+      Mean Sepal.Length (SD)  | 6.27 (0.72)
+      Mean Sepal.Width (SD)   | 2.96 (0.36)
+      Mean Petal.Length (SD)  | 4.83 (1.19)
+      Species [setosa], %     |         6.8
+      Species [versicolor], % |        36.9
+      Species [virginica], %  |        56.3
+
+# report_sample, with more than one grouping variable
+
+    Code
+      out
+    Output
+      # Descriptive Statistics
+      
+      Variable               | setosa, a (n=16) | versicolor, a (n=17) | virginica, a (n=9) | setosa, b (n=15) | versicolor, b (n=17) | virginica, b (n=22) | setosa, c (n=19) | versicolor, c (n=16) | virginica, c (n=19) | Total (n=150)
+      -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      Mean Sepal.Length (SD) |      5.13 (0.36) |          6.08 (0.48) |        6.59 (0.44) |      4.91 (0.31) |          5.84 (0.54) |         6.77 (0.63) |      4.97 (0.36) |          5.88 (0.53) |         6.38 (0.69) |   5.84 (0.83)
+      Mean Sepal.Width (SD)  |      3.50 (0.42) |          2.76 (0.40) |        3.02 (0.25) |      3.34 (0.25) |          2.81 (0.25) |         3.05 (0.36) |      3.44 (0.43) |          2.74 (0.29) |         2.87 (0.30) |   3.06 (0.44)
+
+# report_sample, print vertical
+
+    Code
+      print(out, layout = "vertical")
+    Output
+      # Descriptive Statistics
+      
+      Groups               | Mean Sepal.Length (SD) | Mean Sepal.Width (SD) | Mean Petal.Length (SD)
+      ----------------------------------------------------------------------------------------------
+      setosa, a (n=16)     |            5.13 (0.36) |           3.50 (0.42) |            1.50 (0.12)
+      versicolor, a (n=17) |            6.08 (0.48) |           2.76 (0.40) |            4.37 (0.44)
+      virginica, a (n=9)   |            6.59 (0.44) |           3.02 (0.25) |            5.57 (0.52)
+      setosa, b (n=15)     |            4.91 (0.31) |           3.34 (0.25) |            1.47 (0.17)
+      versicolor, b (n=17) |            5.84 (0.54) |           2.81 (0.25) |            4.25 (0.44)
+      virginica, b (n=22)  |            6.77 (0.63) |           3.05 (0.36) |            5.73 (0.57)
+      setosa, c (n=19)     |            4.97 (0.36) |           3.44 (0.43) |            1.43 (0.21)
+      versicolor, c (n=16) |            5.88 (0.53) |           2.74 (0.29) |            4.16 (0.53)
+      virginica, c (n=19)  |            6.38 (0.69) |           2.87 (0.30) |            5.34 (0.49)
+      Total (n=150)        |            5.84 (0.83) |           3.06 (0.44) |            3.76 (1.77)
 

@@ -1,4 +1,4 @@
-## ---- echo = FALSE----------------------------------------
+## ----echo = FALSE-----------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   message = FALSE,
@@ -15,7 +15,7 @@ if (!requireNamespace("dplyr", quietly = TRUE)) {
   knitr::opts_chunk$set(eval = FALSE)
 }
 
-## ---- results='asis'--------------------------------------
+## ----results='asis'---------------------------------------
 library(report)
 
 cite_packages()

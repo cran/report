@@ -8,7 +8,7 @@
 #' @inherit report return seealso
 #'
 #' @examplesIf require("brms", quietly = TRUE)
-#' \dontrun{
+#' \donttest{
 #' # Bayesian models
 #' library(brms)
 #' model <- suppressWarnings(brm(mpg ~ qsec + wt, data = mtcars, refresh = 0, iter = 300))
@@ -62,9 +62,11 @@ report_priors.brmsfit <- function(x, ...) {
   params <- params[params$Parameter != "(Intercept)", ]
 
   # Return empty if no priors info
-  if (!"Prior_Distribution" %in% names(params) ||
-    nrow(params) == 0 ||
-    all(is.na(params$Prior_Scale))) {
+  has_no_prior_information <- (!"Prior_Distribution" %in% names(params)) ||
+    nrow(params) == 0L ||
+    all(is.na(params$Prior_Scale))
+
+  if (has_no_prior_information) {
     return("")
   }
 

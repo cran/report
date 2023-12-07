@@ -99,21 +99,18 @@ report_effectsize.lm <- function(x, effectsize_method = "refit", ...) {
 
   if ("Component" %in% colnames(table)) {
     merge_by <- c("Parameter", "Component")
-    start_col <- 4
+    start_col <- 4L
   } else {
     merge_by <- "Parameter"
-    start_col <- 3
+    start_col <- 3L
   }
 
   table <- as.data.frame(table)[c(merge_by, estimate, "CI_low", "CI_high")]
   names(table)[start_col:ncol(table)] <- c(paste0(estimate, "_CI_low"), paste0(estimate, "_CI_high"))
 
-
   rules <- .text_effectsize(attr(attr(interpret, "rules"), "rule_name"))
   parameters <- paste0(interpretation, " (", statistics, ")")
 
-
-  # Return output
   as.report_effectsize(parameters,
     summary = parameters,
     table = table,
@@ -389,7 +386,7 @@ report_model.lm <- function(x, table = NULL, ...) {
 
   # Model info
   info <- insight::model_info(x)
-  is_nullmodel <- insight::is_nullmodel(x)
+  is_nullmodel <- suppressWarnings(insight::is_nullmodel(x))
 
   # Boostrap
   if (attributes(table)$bootstrap) {
@@ -463,7 +460,7 @@ report_performance.lm <- function(x, table = NULL, ...) {
 
 
   # Intercept-only
-  if (insight::is_nullmodel(x)) {
+  if (suppressWarnings(insight::is_nullmodel(x))) {
     return(as.report_performance("", summary = ""))
   }
 
@@ -529,16 +526,21 @@ report_text.lm <- function(x, table = NULL, ...) {
   perf <- report_performance(x, table = table, ...)
   intercept <- report_intercept(x, table = table, ...)
 
+  if (suppressWarnings(insight::is_nullmodel(x))) {
+    params_text_full <- params_text <- ""
+  } else {
+    params_text_full <- paste0(" Within this model:\n\n", as.character(params))
+    params_text <- paste0(" Within this model:\n\n", as.character(summary(params), ...))
+  }
 
   text_full <- paste0(
     "We fitted a ",
     model,
     ". ",
     perf,
-    ". ",
+    ifelse(nchar(perf) > 0, ". ", ""),
     intercept,
-    " Within this model:\n\n",
-    as.character(params),
+    params_text_full,
     "\n\n",
     info
   )
@@ -548,10 +550,9 @@ report_text.lm <- function(x, table = NULL, ...) {
     summary(model),
     ". ",
     summary(perf),
-    ". ",
+    ifelse(nchar(perf) > 0, ". ", ""),
     summary(intercept),
-    " Within this model:\n\n",
-    as.character(summary(params), ...)
+    params_text
   )
 
 

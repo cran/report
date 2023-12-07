@@ -351,39 +351,39 @@ Models</a></li>
 </div>
 
 <p>First, load the <code>{report}</code> package:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(report)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">library</span>(report)</span></code></pre></div>
 <div id="getting-started-with-correlations" class="section level2">
 <h2>Getting started with correlations</h2>
 <p>Let’s start by demonstrating some features with simple tests. The
 function <code>report_table()</code> can be used to create a table for
 many R objects.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>wt)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(results)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pearson&#39;s product-moment correlation</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameter1 | Parameter2 |     r |         95% CI | t(30) |      p</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># -----------------------------------------------------------------</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># mtcars$mpg |  mtcars$wt | -0.87 | [-0.93, -0.74] | -9.56 | &lt; .001</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">cor.test</span>(mtcars<span class="sc">$</span>mpg, mtcars<span class="sc">$</span>wt)</span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="fu">report_table</span>(results)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a><span class="co"># Pearson&#39;s product-moment correlation</span></span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Parameter1 | Parameter2 |     r |         95% CI | t(30) |      p</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="co"># -----------------------------------------------------------------</span></span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a><span class="co"># mtcars$mpg |  mtcars$wt | -0.87 | [-0.93, -0.74] | -9.56 | &lt; .001</span></span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
 <p>We can also obtain a shorter version by running
 <code>summary()</code> on the output (that we are going to store in a
 variable called <code>t</code> - like table)</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">report_table</span>(results))</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>t</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pearson&#39;s product-moment correlation</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameter1 | Parameter2 |     r |         95% CI |      p</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ---------------------------------------------------------</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># mtcars$mpg |  mtcars$wt | -0.87 | [-0.93, -0.74] | &lt; .001</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">report_table</span>(results))</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>t</span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># Pearson&#39;s product-moment correlation</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># Parameter1 | Parameter2 |     r |         95% CI |      p</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co"># ---------------------------------------------------------</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># mtcars$mpg |  mtcars$wt | -0.87 | [-0.93, -0.74] | &lt; .001</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
 <p>In the example above, running just <code>t</code> ran
 <code>print(t)</code> under the hood, which prints the table inside the
 console. However, one can nicely display that table in markdown
 documents using <code>display()</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(t)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">display</span>(t)</span></code></pre></div>
 <table>
 <thead>
 <tr class="header">
@@ -408,11 +408,11 @@ mtcars\)</span>wt</td>
 <p>Alternative hypothesis: true correlation is not equal to 0</p>
 <p>We can further customize this table, by adding significance
 stars,</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(t,</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Table 1&quot;</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">footer =</span> <span class="st">&quot;Correlation in the mtcars (n = 32) dataset.</span><span class="sc">\n</span><span class="st">*** p &lt; .001&quot;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">display</span>(t,</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="at">stars =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">title =</span> <span class="st">&quot;Table 1&quot;</span>,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">footer =</span> <span class="st">&quot;Correlation in the mtcars (n = 32) dataset.</span><span class="sc">\n</span><span class="st">*** p &lt; .001&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>)</span></code></pre></div>
 <table>
 <caption>Table 1</caption>
 <thead>
@@ -441,47 +441,47 @@ mtcars\)</span>wt</td>
 <div id="t-tests" class="section level2">
 <h2><em>t</em>-tests, …</h2>
 <p>It works similarly for <em>t</em>-tests.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">report_table</span>(results))</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>t</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Difference |          95% CI | t(18.33) |     p | Cohen&#39;s d |   Cohens_d  CI</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># -7.24      | [-11.28, -3.21] |    -3.77 | 0.001 |     -1.41 | [-2.26, -0.53]</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>t <span class="ot">&lt;-</span> <span class="fu">summary</span>(<span class="fu">report_table</span>(results))</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>t</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="co"># Difference |          95% CI | t(18.33) |     p | Cohen&#39;s d |  Cohen&#39;s d  CI</span></span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------</span></span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a><span class="co"># -7.24      | [-11.28, -3.21] |    -3.77 | 0.001 |     -1.41 | [-2.26, -0.53]</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a><span class="co"># Alternative hypothesis: two.sided</span></span></code></pre></div>
 <p>Note that, by default, <code>report_table()</code> prettifies the
 printing: that means that the column names and its content is,
 underneath, not necessarily what is printed, which can be a bit
 confusing. For instance, while the confidence interval <code>CI</code>
 appears as one column, it this actually made of three columns! One can
 access this <em>raw</em> table as a dataframe:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">as.data.frame</span>(t)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Difference   CI    CI_low   CI_high         t df_error</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1  -7.244939 0.95 -11.28019 -3.209684 -3.767123 18.33225</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co">#             p Alternative  Cohens_d Cohens_d_CI_low</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 0.001373638   two.sided -1.411046       -2.260021</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   Cohens_d_CI_high</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 1       -0.5342257</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">as.data.frame</span>(t)</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a><span class="co">#   Difference   CI    CI_low   CI_high         t df_error</span></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="co"># 1  -7.244939 0.95 -11.28019 -3.209684 -3.767123 18.33225</span></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#             p Alternative  Cohens_d Cohens_d_CI_low</span></span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># 1 0.001373638   two.sided -1.411046       -2.260021</span></span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#   Cohens_d_CI_high</span></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># 1       -0.5342257</span></span></code></pre></div>
 <p>In fact, the function used to <em>prettify</em> the output is called
 <code>insight::format_table()</code> and is accessible to you too, so
 that you can prettify the output while keeping it as a data frame.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>insight<span class="sc">::</span><span class="fu">format_table</span>(<span class="fu">as.data.frame</span>(t), <span class="at">stars =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">#   Difference          95% CI t(18.33)       p Alternative</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 1      -7.24 [-11.28, -3.21]    -3.77 0.001**   two.sided</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   Cohen&#39;s d   Cohens_d  CI</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1     -1.41 [-2.26, -0.53]</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>insight<span class="sc">::</span><span class="fu">format_table</span>(<span class="fu">as.data.frame</span>(t), <span class="at">stars =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="co">#   Difference          95% CI t(18.33)       p Alternative</span></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a><span class="co"># 1      -7.24 [-11.28, -3.21]    -3.77 0.001**   two.sided</span></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="co">#   Cohen&#39;s d  Cohen&#39;s d  CI</span></span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="co"># 1     -1.41 [-2.26, -0.53]</span></span></code></pre></div>
 <p>Also, you can join the results of multiple tables:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>wt <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>results3 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>qsec <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report_table</span>(results1),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report_table</span>(results2),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">report_table</span>(results3)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">display</span>(results)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a>results1 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>mpg <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>results2 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>wt <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>results3 <span class="ot">&lt;-</span> <span class="fu">t.test</span>(mtcars<span class="sc">$</span>qsec <span class="sc">~</span> mtcars<span class="sc">$</span>am)</span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a>  <span class="fu">report_table</span>(results1),</span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>  <span class="fu">report_table</span>(results2),</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a>  <span class="fu">report_table</span>(results3)</span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a><span class="fu">display</span>(results)</span></code></pre></div>
 <table>
 <colgroup>
 <col width="9%" />
@@ -508,7 +508,7 @@ that you can prettify the output while keeping it as a data frame.</p>
 <th align="center">df</th>
 <th align="center">p</th>
 <th align="center">Cohen’s d</th>
-<th align="center">Cohens_d CI</th>
+<th align="center">Cohen’s d CI</th>
 </tr>
 </thead>
 <tbody>
@@ -562,24 +562,24 @@ mtcars\)</span>am</td>
 </div>
 <div id="linear-models" class="section level2">
 <h2>Linear Models</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species <span class="sc">*</span> Petal.Width, <span class="at">data =</span> iris)</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">report_table</span>(model)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Parameter                          | Coefficient |        95% CI | t(144) |      p | Std. Coef. | Std. Coef. 95% CI |    Fit</span></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------------------------------------------------------</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># (Intercept)                        |        1.33 | [ 1.07, 1.59] |  10.14 | &lt; .001 |      -1.01 |    [-1.53, -0.48] |       </span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Species [versicolor]               |        0.45 | [-0.28, 1.19] |   1.21 | 0.227  |       1.16 |    [ 0.63,  1.69] |       </span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Species [virginica]                |        2.91 | [ 2.11, 3.72] |   7.17 | &lt; .001 |       1.72 |    [ 1.16,  2.28] |       </span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Petal Width                        |        0.55 | [-0.42, 1.52] |   1.12 | 0.267  |       0.24 |    [-0.18,  0.65] |       </span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width |        1.32 | [ 0.23, 2.42] |   2.38 | 0.019  |       0.57 |    [ 0.10,  1.05] |       </span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  |        0.10 | [-0.94, 1.14] |   0.19 | 0.848  |       0.04 |    [-0.40,  0.49] |       </span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">#                                    |             |               |        |        |            |                   |       </span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># AIC                                |             |               |        |        |            |                   | 128.29</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="co"># AICc                               |             |               |        |        |            |                   | 129.08</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co"># BIC                                |             |               |        |        |            |                   | 149.36</span></span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># R2                                 |             |               |        |        |            |                   |   0.96</span></span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># R2 (adj.)                          |             |               |        |        |            |                   |   0.96</span></span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Sigma                              |             |               |        |        |            |                   |   0.36</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species <span class="sc">*</span> Petal.Width, <span class="at">data =</span> iris)</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">report_table</span>(model)</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># Parameter                          | Coefficient |        95% CI | t(144) |      p | Std. Coef. | Std. Coef. 95% CI |    Fit</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------------------------------------------------------</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># (Intercept)                        |        1.33 | [ 1.07, 1.59] |  10.14 | &lt; .001 |      -1.01 |    [-1.53, -0.48] |       </span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># Species [versicolor]               |        0.45 | [-0.28, 1.19] |   1.21 | 0.227  |       1.16 |    [ 0.63,  1.69] |       </span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Species [virginica]                |        2.91 | [ 2.11, 3.72] |   7.17 | &lt; .001 |       1.72 |    [ 1.16,  2.28] |       </span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># Petal Width                        |        0.55 | [-0.42, 1.52] |   1.12 | 0.267  |       0.24 |    [-0.18,  0.65] |       </span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width |        1.32 | [ 0.23, 2.42] |   2.38 | 0.019  |       0.57 |    [ 0.10,  1.05] |       </span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  |        0.10 | [-0.94, 1.14] |   0.19 | 0.848  |       0.04 |    [-0.40,  0.49] |       </span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#                                    |             |               |        |        |            |                   |       </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co"># AIC                                |             |               |        |        |            |                   | 128.29</span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># AICc                               |             |               |        |        |            |                   | 129.08</span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co"># BIC                                |             |               |        |        |            |                   | 149.36</span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co"># R2                                 |             |               |        |        |            |                   |   0.96</span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># R2 (adj.)                          |             |               |        |        |            |                   |   0.96</span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co"># Sigma                              |             |               |        |        |            |                   |   0.36</span></span></code></pre></div>
 </div>
 
 

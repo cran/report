@@ -190,10 +190,13 @@ report_parameters.numeric <- function(x,
   if (!is.null(missing_percentage)) {
     if (isTRUE(missing_percentage)) {
       n_missing <- table$percentage_Missing[1]
-      text_missing <- paste0(insight::format_value(table$percentage_Missing[1],
-        protect_integers = TRUE,
-        digits = digits
-      ), "% missing")
+      text_missing <- paste0(
+        insight::format_value(table$percentage_Missing[1],
+          protect_integers = TRUE,
+          digits = digits
+        ),
+        "% missing"
+      )
     } else {
       n_missing <- table$n_Missing[1]
       text_missing <- paste0(table$n_Missing[1], " missing")
@@ -203,15 +206,15 @@ report_parameters.numeric <- function(x,
   }
 
   text_full <- c(
-    "n_Obs" = text_n,
-    "Mean" = text_mean,
-    "Dispersion_Mean" = paste0("SD = ", text_sd),
-    "Median" = text_median,
-    "Dispersion_Median" = paste0("MAD = ", text_mad),
-    "Range" = paste0("range: ", text_range),
-    "Skewness" = text_skewness,
-    "Kurtosis" = text_kurtosis,
-    "Missing" = text_missing
+    n_Obs = text_n,
+    Mean = text_mean,
+    Dispersion_Mean = paste0("SD = ", text_sd),
+    Median = text_median,
+    Dispersion_Median = paste0("MAD = ", text_mad),
+    Range = paste0("range: ", text_range),
+    Skewness = text_skewness,
+    Kurtosis = text_kurtosis,
+    Missing = text_missing
   )
 
   # Shorten ---
