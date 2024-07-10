@@ -1,3 +1,25 @@
+# report 0.5.9
+
+Breaking
+
+* Arguments named `group`, `at` and `group_by` will be deprecated in future
+  releases. of _easystats_ packages. Please use `by` instead. This affects
+  following functions in *report*:
+
+  * `report_participants()`
+  * `report_sample()`
+
+Minor changes 
+
+* `report` now supports reporting of Bayesian model comparison with variables of class `brms::loo_compare`.
+* `report` now supports reporting of BayesFactor objects with variables of class `BFBayesFactor`.
+* `report_sample()` now suggests valid column names for misspelled columns in the `select`, `by`, `weights` and `exclude` arguments.
+
+Bug fixes
+
+* Fixed issues with incorrectly passing additional arguments to downstream
+  functions in `report()` for `htest` objects.
+
 # report 0.5.8
 
 New features

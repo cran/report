@@ -49,7 +49,7 @@ overflow: visible;
 </style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -396,8 +396,8 @@ documents using <code>display()</code>.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mtcars<span class="math inline">\(mpg |
-mtcars\)</span>wt</td>
+<td align="left">mtcars<span class="math inline">\(mpg
+|  mtcars\)</span>wt</td>
 <td align="center">-0.87</td>
 <td align="center">(-0.93, -0.74)</td>
 <td align="center">&lt; .001</td>
@@ -426,8 +426,8 @@ stars,</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mtcars<span class="math inline">\(mpg |
-mtcars\)</span>wt</td>
+<td align="left">mtcars<span class="math inline">\(mpg
+|  mtcars\)</span>wt</td>
 <td align="center">-0.87</td>
 <td align="center">(-0.93, -0.74)</td>
 <td align="center">&lt; .001***</td>
@@ -462,7 +462,7 @@ access this <em>raw</em> table as a dataframe:</p>
 <span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="co">#             p Alternative  Cohens_d Cohens_d_CI_low</span></span>
 <span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="co"># 1 0.001373638   two.sided -1.411046       -2.260021</span></span>
 <span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a><span class="co">#   Cohens_d_CI_high</span></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># 1       -0.5342257</span></span></code></pre></div>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a><span class="co"># 1       -0.5342256</span></span></code></pre></div>
 <p>In fact, the function used to <em>prettify</em> the output is called
 <code>insight::format_table()</code> and is accessible to you too, so
 that you can prettify the output while keeping it as a data frame.</p>
@@ -513,7 +513,7 @@ that you can prettify the output while keeping it as a data frame.</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="left">mtcars<span class="math inline">\(mpg |
+<td align="left">mtcars<span class="math inline">\(mpg  |
 mtcars\)</span>am</td>
 <td align="center">17.15</td>
 <td align="center">24.39</td>
@@ -527,7 +527,7 @@ mtcars\)</span>am</td>
 <td align="center"></td>
 </tr>
 <tr class="even">
-<td align="left">mtcars<span class="math inline">\(wt |
+<td align="left">mtcars<span class="math inline">\(wt   |
 mtcars\)</span>am</td>
 <td align="center">3.77</td>
 <td align="center">2.41</td>

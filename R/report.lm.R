@@ -345,6 +345,12 @@ report_intercept.lm <- function(x, table = NULL, ...) {
   } else {
     idx <- !is.na(table$Parameter) & table$Parameter == "(Intercept)"
   }
+
+  # sanity check - if model has no intercept, return NULL
+  if (!any(idx)) {
+    return(NULL)
+  }
+
   intercept <- table[idx, ]
 
   estimate <- .find_regression_estimate(table)
@@ -483,7 +489,7 @@ report_info.lm <- function(x,
     effectsize <- report_effectsize(x, ...)
   }
 
-  text <- .info_effectsize(x, effectsize = effectsize, include_effectsize = include_effectsize)
+  info_text <- .info_effectsize(x, effectsize = effectsize, include_effectsize = include_effectsize)
 
   if (is.null(parameters)) {
     parameters <- report_parameters(x, ...)
@@ -495,7 +501,7 @@ report_info.lm <- function(x,
   }
 
   if ("ci_method" %in% names(att)) {
-    text <- paste0(text, " ", .info_df(
+    info_text <- paste0(info_text, " ", .info_df(
       ci = att$ci,
       ci_method = att$ci_method,
       test_statistic = att$test_statistic,
@@ -508,7 +514,7 @@ report_info.lm <- function(x,
   # }
 
 
-  as.report_info(text)
+  as.report_info(info_text)
 }
 
 
@@ -538,25 +544,25 @@ report_text.lm <- function(x, table = NULL, ...) {
     model,
     ". ",
     perf,
-    ifelse(nchar(perf) > 0, ". ", ""),
+    ifelse(nzchar(perf, keepNA = TRUE), ". ", ""),
     intercept,
     params_text_full,
     "\n\n",
     info
   )
 
-  text <- paste0(
+  summary_text <- paste0(
     "We fitted a ",
     summary(model),
     ". ",
     summary(perf),
-    ifelse(nchar(perf) > 0, ". ", ""),
+    ifelse(nzchar(perf, keepNA = TRUE), ". ", ""),
     summary(intercept),
     params_text
   )
 
 
-  as.report_text(text_full, summary = text)
+  as.report_text(text_full, summary = summary_text)
 }
 
 
@@ -569,7 +575,7 @@ report_text.lm <- function(x, table = NULL, ...) {
   if (!is.null(coefname) && coefname %in% names(table)) {
     estimate <- attributes(table)$coefficient_name
   } else {
-    estimate <- datawizard::data_find(table, candidates, regex = TRUE, verbose = FALSE)[1]
+    estimate <- datawizard::extract_column_names(table, candidates, regex = TRUE, verbose = FALSE)[1]
   }
   estimate
 }
