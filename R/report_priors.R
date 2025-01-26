@@ -25,7 +25,6 @@ report_priors <- function(x, ...) {
 }
 
 
-
 # METHODS -----------------------------------------------------------------
 
 
@@ -53,5 +52,5 @@ summary.report_priors <- function(object, ...) {
 
 #' @export
 print.report_priors <- function(x, ...) {
-  cat(paste0(x, collapse = "\n"))
+  cat(paste(x, collapse = "\n"))
 }

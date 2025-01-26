@@ -60,7 +60,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
 { counter-reset: source-line 0; }
@@ -565,21 +565,69 @@ mtcars\)</span>am</td>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Petal.Length <span class="sc">~</span> Species <span class="sc">*</span> Petal.Width, <span class="at">data =</span> iris)</span>
 <span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a><span class="fu">report_table</span>(model)</span>
-<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># Parameter                          | Coefficient |        95% CI | t(144) |      p | Std. Coef. | Std. Coef. 95% CI |    Fit</span></span>
-<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co"># ----------------------------------------------------------------------------------------------------------------------------</span></span>
-<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># (Intercept)                        |        1.33 | [ 1.07, 1.59] |  10.14 | &lt; .001 |      -1.01 |    [-1.53, -0.48] |       </span></span>
-<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># Species [versicolor]               |        0.45 | [-0.28, 1.19] |   1.21 | 0.227  |       1.16 |    [ 0.63,  1.69] |       </span></span>
-<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Species [virginica]                |        2.91 | [ 2.11, 3.72] |   7.17 | &lt; .001 |       1.72 |    [ 1.16,  2.28] |       </span></span>
-<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># Petal Width                        |        0.55 | [-0.42, 1.52] |   1.12 | 0.267  |       0.24 |    [-0.18,  0.65] |       </span></span>
-<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width |        1.32 | [ 0.23, 2.42] |   2.38 | 0.019  |       0.57 |    [ 0.10,  1.05] |       </span></span>
-<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  |        0.10 | [-0.94, 1.14] |   0.19 | 0.848  |       0.04 |    [-0.40,  0.49] |       </span></span>
-<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#                                    |             |               |        |        |            |                   |       </span></span>
-<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co"># AIC                                |             |               |        |        |            |                   | 128.29</span></span>
-<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># AICc                               |             |               |        |        |            |                   | 129.08</span></span>
-<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co"># BIC                                |             |               |        |        |            |                   | 149.36</span></span>
-<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co"># R2                                 |             |               |        |        |            |                   |   0.96</span></span>
-<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># R2 (adj.)                          |             |               |        |        |            |                   |   0.96</span></span>
-<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co"># Sigma                              |             |               |        |        |            |                   |   0.36</span></span></code></pre></div>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a><span class="co"># Parameter                          | Coefficient</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a><span class="co"># ------------------------------------------------</span></span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a><span class="co"># (Intercept)                        |        1.33</span></span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a><span class="co"># Species [versicolor]               |        0.45</span></span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a><span class="co"># Species [virginica]                |        2.91</span></span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a><span class="co"># Petal Width                        |        0.55</span></span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width |        1.32</span></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  |        0.10</span></span>
+<span id="cb10-12"><a href="#cb10-12" tabindex="-1"></a><span class="co">#                                    |            </span></span>
+<span id="cb10-13"><a href="#cb10-13" tabindex="-1"></a><span class="co"># AIC                                |            </span></span>
+<span id="cb10-14"><a href="#cb10-14" tabindex="-1"></a><span class="co"># AICc                               |            </span></span>
+<span id="cb10-15"><a href="#cb10-15" tabindex="-1"></a><span class="co"># BIC                                |            </span></span>
+<span id="cb10-16"><a href="#cb10-16" tabindex="-1"></a><span class="co"># R2                                 |            </span></span>
+<span id="cb10-17"><a href="#cb10-17" tabindex="-1"></a><span class="co"># R2 (adj.)                          |            </span></span>
+<span id="cb10-18"><a href="#cb10-18" tabindex="-1"></a><span class="co"># Sigma                              |            </span></span>
+<span id="cb10-19"><a href="#cb10-19" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb10-20"><a href="#cb10-20" tabindex="-1"></a><span class="co"># Parameter                          |        95% CI | t(144)</span></span>
+<span id="cb10-21"><a href="#cb10-21" tabindex="-1"></a><span class="co"># -----------------------------------------------------------</span></span>
+<span id="cb10-22"><a href="#cb10-22" tabindex="-1"></a><span class="co"># (Intercept)                        | [ 1.07, 1.59] |  10.14</span></span>
+<span id="cb10-23"><a href="#cb10-23" tabindex="-1"></a><span class="co"># Species [versicolor]               | [-0.28, 1.19] |   1.21</span></span>
+<span id="cb10-24"><a href="#cb10-24" tabindex="-1"></a><span class="co"># Species [virginica]                | [ 2.11, 3.72] |   7.17</span></span>
+<span id="cb10-25"><a href="#cb10-25" tabindex="-1"></a><span class="co"># Petal Width                        | [-0.42, 1.52] |   1.12</span></span>
+<span id="cb10-26"><a href="#cb10-26" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width | [ 0.23, 2.42] |   2.38</span></span>
+<span id="cb10-27"><a href="#cb10-27" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  | [-0.94, 1.14] |   0.19</span></span>
+<span id="cb10-28"><a href="#cb10-28" tabindex="-1"></a><span class="co">#                                    |               |       </span></span>
+<span id="cb10-29"><a href="#cb10-29" tabindex="-1"></a><span class="co"># AIC                                |               |       </span></span>
+<span id="cb10-30"><a href="#cb10-30" tabindex="-1"></a><span class="co"># AICc                               |               |       </span></span>
+<span id="cb10-31"><a href="#cb10-31" tabindex="-1"></a><span class="co"># BIC                                |               |       </span></span>
+<span id="cb10-32"><a href="#cb10-32" tabindex="-1"></a><span class="co"># R2                                 |               |       </span></span>
+<span id="cb10-33"><a href="#cb10-33" tabindex="-1"></a><span class="co"># R2 (adj.)                          |               |       </span></span>
+<span id="cb10-34"><a href="#cb10-34" tabindex="-1"></a><span class="co"># Sigma                              |               |       </span></span>
+<span id="cb10-35"><a href="#cb10-35" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb10-36"><a href="#cb10-36" tabindex="-1"></a><span class="co"># Parameter                          |      p | Std. Coef.</span></span>
+<span id="cb10-37"><a href="#cb10-37" tabindex="-1"></a><span class="co"># --------------------------------------------------------</span></span>
+<span id="cb10-38"><a href="#cb10-38" tabindex="-1"></a><span class="co"># (Intercept)                        | &lt; .001 |      -1.01</span></span>
+<span id="cb10-39"><a href="#cb10-39" tabindex="-1"></a><span class="co"># Species [versicolor]               | 0.227  |       1.16</span></span>
+<span id="cb10-40"><a href="#cb10-40" tabindex="-1"></a><span class="co"># Species [virginica]                | &lt; .001 |       1.72</span></span>
+<span id="cb10-41"><a href="#cb10-41" tabindex="-1"></a><span class="co"># Petal Width                        | 0.267  |       0.24</span></span>
+<span id="cb10-42"><a href="#cb10-42" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width | 0.019  |       0.57</span></span>
+<span id="cb10-43"><a href="#cb10-43" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  | 0.848  |       0.04</span></span>
+<span id="cb10-44"><a href="#cb10-44" tabindex="-1"></a><span class="co">#                                    |        |           </span></span>
+<span id="cb10-45"><a href="#cb10-45" tabindex="-1"></a><span class="co"># AIC                                |        |           </span></span>
+<span id="cb10-46"><a href="#cb10-46" tabindex="-1"></a><span class="co"># AICc                               |        |           </span></span>
+<span id="cb10-47"><a href="#cb10-47" tabindex="-1"></a><span class="co"># BIC                                |        |           </span></span>
+<span id="cb10-48"><a href="#cb10-48" tabindex="-1"></a><span class="co"># R2                                 |        |           </span></span>
+<span id="cb10-49"><a href="#cb10-49" tabindex="-1"></a><span class="co"># R2 (adj.)                          |        |           </span></span>
+<span id="cb10-50"><a href="#cb10-50" tabindex="-1"></a><span class="co"># Sigma                              |        |           </span></span>
+<span id="cb10-51"><a href="#cb10-51" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb10-52"><a href="#cb10-52" tabindex="-1"></a><span class="co"># Parameter                          | Std. Coef. 95% CI |    Fit</span></span>
+<span id="cb10-53"><a href="#cb10-53" tabindex="-1"></a><span class="co"># ---------------------------------------------------------------</span></span>
+<span id="cb10-54"><a href="#cb10-54" tabindex="-1"></a><span class="co"># (Intercept)                        |    [-1.53, -0.48] |       </span></span>
+<span id="cb10-55"><a href="#cb10-55" tabindex="-1"></a><span class="co"># Species [versicolor]               |    [ 0.63,  1.69] |       </span></span>
+<span id="cb10-56"><a href="#cb10-56" tabindex="-1"></a><span class="co"># Species [virginica]                |    [ 1.16,  2.28] |       </span></span>
+<span id="cb10-57"><a href="#cb10-57" tabindex="-1"></a><span class="co"># Petal Width                        |    [-0.18,  0.65] |       </span></span>
+<span id="cb10-58"><a href="#cb10-58" tabindex="-1"></a><span class="co"># Species [versicolor] × Petal Width |    [ 0.10,  1.05] |       </span></span>
+<span id="cb10-59"><a href="#cb10-59" tabindex="-1"></a><span class="co"># Species [virginica] × Petal Width  |    [-0.40,  0.49] |       </span></span>
+<span id="cb10-60"><a href="#cb10-60" tabindex="-1"></a><span class="co">#                                    |                   |       </span></span>
+<span id="cb10-61"><a href="#cb10-61" tabindex="-1"></a><span class="co"># AIC                                |                   | 128.29</span></span>
+<span id="cb10-62"><a href="#cb10-62" tabindex="-1"></a><span class="co"># AICc                               |                   | 129.08</span></span>
+<span id="cb10-63"><a href="#cb10-63" tabindex="-1"></a><span class="co"># BIC                                |                   | 149.36</span></span>
+<span id="cb10-64"><a href="#cb10-64" tabindex="-1"></a><span class="co"># R2                                 |                   |   0.96</span></span>
+<span id="cb10-65"><a href="#cb10-65" tabindex="-1"></a><span class="co"># R2 (adj.)                          |                   |   0.96</span></span>
+<span id="cb10-66"><a href="#cb10-66" tabindex="-1"></a><span class="co"># Sigma                              |                   |   0.36</span></span></code></pre></div>
 </div>
 
 

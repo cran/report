@@ -181,13 +181,16 @@ report_sample <- function(data,
         unique(groups),
         new_column = ".old_names",
         separator = "."
-      )[[".old_names"]]
+      )[".old_names"]
+
       new_names <- datawizard::data_unite(
         unique(groups),
         new_column = ".new_names",
         separator = ", "
-      )[[".new_names"]]
-      result <- datawizard::data_rename(result, pattern = old_names, replacement = new_names)
+      )[".new_names"]
+
+      name_map <- stats::setNames(new_names[[1]], old_names[[1]])
+      names(result) <- name_map[names(result)]
     }
     # remember values of first columns
     variable <- result[[1]]["Variable"]
@@ -325,7 +328,6 @@ report_sample <- function(data,
 }
 
 
-
 .report_sample_row.factor <- function(x,
                                       column,
                                       weights = NULL,
@@ -388,7 +390,6 @@ report_sample <- function(data,
 .report_sample_row.character <- .report_sample_row.factor
 
 
-
 # Standard error for confidence interval of proportions ----
 
 .ci_proportion <- function(x, table_proportions, weights, ci, ci_method, ci_correct) {
@@ -444,7 +445,6 @@ report_sample <- function(data,
   }
   out
 }
-
 
 
 # print-method --------------------------------------------
