@@ -1,7 +1,7 @@
-e8057dce25e235b65355a88a7af59b10 *DESCRIPTION
+17e89b3d13aa90b65d5c6c2b8f0353ae *DESCRIPTION
 249074f1c487dc30ce12a85344e218fb *LICENSE
 0cb7e73173f410ad0c8b1934f48f8096 *NAMESPACE
-9790841dbd5a5e03e50a1579fcb27dcf *NEWS.md
+e9877350ef3fe6e151b984f244ab549a *NEWS.md
 ddc599870b42a97c756ce9a185724b2b *R/cite_easystats.R
 1fa3e0caf5a71d51e2e2fb7e01695997 *R/format_algorithm.R
 2585ada2f8cfe6cc09d7368fc1845931 *R/format_citation.R
@@ -21,7 +21,7 @@ c159233fa783c334d0998ee267edf34d *R/report.compare_performance.R
 2fa16175b4009f8fcf5a2aab1943a6ba *R/report.coxph.R
 07fd5c899e9d72444bacf7cb65afb3cf *R/report.data.frame.R
 7c340bdaff8c766d7a451f74a35d4a29 *R/report.default.R
-9f256941d56ec9498989e6a9e1ce4998 *R/report.estimate_contrasts.R
+a8f427427f2be1fbbfee5a568366b231 *R/report.estimate_contrasts.R
 dc25d340268b7930a0cbbebd47bb6051 *R/report.factor.R
 b58c293ff0381dfa5f483222e003adc1 *R/report.glm.R
 b585352883d4d9ade3aa46484775235e *R/report.glmmTMB.R
@@ -113,7 +113,7 @@ d948ff59e5d485ca9899912bd27f7c9c *man/report.brmsfit.Rd
 63b440d6a77ca50a268e43561cc8dc6b *man/report.compare_performance.Rd
 de656688afed271f2bd32e2b224f7d36 *man/report.data.frame.Rd
 272fa8229bc6e1c5464fa087bd6b97cf *man/report.default.Rd
-4aeb90bcc39f882c2b855991fe630363 *man/report.estimate_contrasts.Rd
+6b68dc233523a859e978e8c644a11582 *man/report.estimate_contrasts.Rd
 fb6e233b9ccd009383a738a3968a4c34 *man/report.htest.Rd
 344806139b1b113d223c6723e3c5cac9 *man/report.lavaan.Rd
 e0fa7e70f5ed92d8b6e95eb89185dd87 *man/report.lm.Rd
