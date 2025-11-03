@@ -3,6 +3,7 @@
 #' Create reports for ANOVA models.
 #'
 #' @param x Object of class `aov`, `anova` or `aovlist`.
+#' @param include_intercept	Set to `TRUE` to include the intercept (relevant for type-3 ANOVA tables).
 #' @inheritParams report
 #' @inheritParams report.htest
 #' @inherit report return seealso
@@ -20,10 +21,10 @@
 #' @return An object of class [report()].
 #' @export
 report.aov <- function(x, ...) {
-  table <- report_table(x, ...)
-  text <- report_text(x, table = table, ...)
+  results_table <- report_table(x, ...)
+  result_text <- report_text(x, table = results_table, ...)
 
-  as.report(text, table = table, ...)
+  as.report(result_text, table = results_table, ...)
 }
 
 #' @export
@@ -37,47 +38,41 @@ report.aovlist <- report.aov
 
 
 #' @rdname report.aov
+#' @inheritParams report.lm
 #' @export
-report_effectsize.aov <- function(x, ...) {
-  table <- suppressMessages(effectsize::effectsize(x, include_intercept = FALSE, ...))
-  estimate <- names(table)[effectsize::is_effectsize_name(names(table))]
+report_effectsize.aov <- function(x, include_intercept = FALSE, ...) {
+  results_table <- suppressMessages(effectsize::effectsize(x, include_intercept = include_intercept, ...))
+  estimate <- names(results_table)[effectsize::is_effectsize_name(names(results_table))]
 
-  if (estimate == "Eta2_partial") {
-    interpret <- effectsize::interpret_eta_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Eta2 (partial) = ", insight::format_value(table[[estimate]]))
-  } else if (estimate == "Eta2") {
-    interpret <- effectsize::interpret_eta_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Eta2 = ", insight::format_value(table[[estimate]]))
-  } else if (estimate == "Omega2_partial") {
-    interpret <- effectsize::interpret_omega_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Omega2 (partial) = ", insight::format_value(table[[estimate]]))
-  } else if (estimate == "Omega2") {
-    interpret <- effectsize::interpret_omega_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Epsilon2 = ", insight::format_value(table[[estimate]]))
-  } else if (estimate == "Epsilon2_partial") {
-    interpret <- effectsize::interpret_epsilon_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Epsilon2 (partial) = ", insight::format_value(table[[estimate]]))
-  } else if (estimate == "Epsilon2") {
-    interpret <- effectsize::interpret_epsilon_squared(table[[estimate]], ...)
-    interpretation <- interpret
-    main <- paste0("Epsilon2 = ", insight::format_value(table[[estimate]]))
-  }
+  interpret <- switch(estimate,
+    Eta2_partial = effectsize::interpret_eta_squared(results_table[[estimate]], ...),
+    Eta2 = effectsize::interpret_eta_squared(results_table[[estimate]], ...),
+    Omega2_partial = effectsize::interpret_omega_squared(results_table[[estimate]], ...),
+    Omega2 = effectsize::interpret_omega_squared(results_table[[estimate]], ...),
+    Epsilon2_partial = effectsize::interpret_epsilon_squared(results_table[[estimate]], ...),
+    Epsilon2 = effectsize::interpret_epsilon_squared(results_table[[estimate]], ...)
+  )
 
+  interpretation <- interpret
 
-  ci <- table$CI
+  main <- switch(estimate,
+    Eta2_partial = paste0("Eta2 (partial) = ", insight::format_value(results_table[[estimate]])),
+    Eta2 = paste0("Eta2 = ", insight::format_value(results_table[[estimate]])),
+    Omega2_partial = paste0("Omega2 (partial) = ", insight::format_value(results_table[[estimate]])),
+    Omega2 = paste0("Epsilon2 = ", insight::format_value(results_table[[estimate]])),
+    Epsilon2_partial = paste0("Epsilon2 (partial) = ", insight::format_value(results_table[[estimate]])),
+    Epsilon2 = paste0("Epsilon2 = ", insight::format_value(results_table[[estimate]]))
+  )
+
+  ci <- results_table$CI
   statistics <- paste0(
     main,
     ", ",
-    insight::format_ci(table$CI_low, table$CI_high, ci)
+    insight::format_ci(results_table$CI_low, results_table$CI_high, ci)
   )
 
-  table <- as.data.frame(table)[c("Parameter", estimate, "CI_low", "CI_high")]
-  names(table)[3:ncol(table)] <- c(paste0(estimate, "_CI_low"), paste0(estimate, "_CI_high"))
+  effsize_table <- as.data.frame(results_table)[c("Parameter", estimate, "CI_low", "CI_high")]
+  names(effsize_table)[3:ncol(effsize_table)] <- c(paste0(estimate, "_CI_low"), paste0(estimate, "_CI_high"))
 
   rules <- .text_effectsize(attr(attr(interpret, "rules"), "rule_name"))
   parameters <- paste0(interpretation, " (", statistics, ")")
@@ -85,7 +80,7 @@ report_effectsize.aov <- function(x, ...) {
 
   as.report_effectsize(parameters,
     summary = parameters,
-    table = table,
+    table = effsize_table,
     interpretation = interpretation,
     statistics = statistics,
     rules = rules,
@@ -104,10 +99,14 @@ report_effectsize.aovlist <- report_effectsize.aov
 
 #' @rdname report.aov
 #' @export
-report_table.aov <- function(x, ...) {
-  effsize <- report_effectsize(x, ...)
+report_table.aov <- function(x, include_intercept = FALSE, ...) {
+  effsize <- report_effectsize(x, include_intercept = include_intercept, ...)
   effsize_table <- attributes(effsize)$table
   params <- parameters::model_parameters(x, ...)
+
+  if (!include_intercept) {
+    params <- params[params$Parameter != "(Intercept)", ]
+  }
 
   if ("Group" %in% names(params)) {
     effsize_table$Group <- "Within"
@@ -128,7 +127,7 @@ report_table.aov <- function(x, ...) {
 
   row.names(table_full) <- NULL
 
-  table <- datawizard::data_remove(
+  results_table <- datawizard::data_remove(
     table_full,
     select = "(_CI_low|_CI_high)$",
     regex = TRUE
@@ -136,7 +135,7 @@ report_table.aov <- function(x, ...) {
 
   as.report_table(
     table_full,
-    summary = table,
+    summary = results_table,
     ci = attributes(effsize)$ci,
     effsize = effsize
   )
@@ -172,32 +171,32 @@ report_statistics.aov <- function(x, table = NULL, ...) {
   }
 
   # DoFs
-  text <- paste0(
+  result_text <- paste0(
     "F(",
     insight::format_value(parameters$df, protect_integers = TRUE)
   )
 
   if (!is.null(DoF_residual)) {
-    text <- paste0(text, ", ", insight::format_value(DoF_residual, protect_integers = TRUE))
+    result_text <- paste0(result_text, ", ", insight::format_value(DoF_residual, protect_integers = TRUE))
   } else if ("DoF_Residuals" %in% names(parameters)) {
-    text <- paste0(text, ", ", insight::format_value(parameters$DoF_Residuals, protect_integers = TRUE))
+    result_text <- paste0(result_text, ", ", insight::format_value(parameters$DoF_Residuals, protect_integers = TRUE))
   }
 
   # Indices
-  text <- paste0(
-    text,
+  result_text <- paste0(
+    result_text,
     ") = ",
-    insight::format_value(parameters$`F`),
+    insight::format_value(parameters[["F"]]),
     ", ",
     insight::format_p(parameters$p)
   )
 
   # Effect size
-  text_full <- paste0(text, "; ", attributes(effsize)$statistics)
-  text <- paste0(text, ", ", attributes(effsize)$main)
+  text_full <- paste0(result_text, "; ", attributes(effsize)$statistics)
+  result_text <- paste0(result_text, ", ", attributes(effsize)$main)
 
   as.report_statistics(text_full,
-    summary = text,
+    summary = result_text,
     table = table,
     effsize = effsize
   )
@@ -217,13 +216,13 @@ report_statistics.aovlist <- report_statistics.aov
 #' @export
 report_parameters.aov <- function(x, ...) {
   stats <- report_statistics(x, ...)
-  table <- attributes(stats)$table
+  stats_table <- attributes(stats)$table
   effsize <- attributes(stats)$effsize
 
-  params <- table[table$Parameter != "Residuals", ]
+  params <- stats_table[stats_table$Parameter != "Residuals", ]
 
   # Text parameters
-  text <- vapply(
+  parameter_text <- vapply(
     params$Parameter,
     .format_parameters_aov,
     USE.NAMES = FALSE,
@@ -231,8 +230,8 @@ report_parameters.aov <- function(x, ...) {
   )
 
   # Significance
-  text <- paste0(
-    text,
+  parameter_text <- paste0(
+    parameter_text,
     " is statistically ",
     effectsize::interpret_p(params$p),
     " and ",
@@ -240,13 +239,13 @@ report_parameters.aov <- function(x, ...) {
     " ("
   )
 
-  text_full <- paste0(text, stats, ")")
-  text <- paste0(text, summary(stats), ")")
+  text_full <- paste0(parameter_text, stats, ")")
+  parameter_text <- paste0(parameter_text, summary(stats), ")")
 
   as.report_parameters(
     text_full,
-    summary = text,
-    table = table,
+    summary = parameter_text,
+    table = stats_table,
     effectsize = effsize,
     ...
   )
@@ -269,16 +268,16 @@ report_model.aov <- function(x, table = NULL, ...) {
   }
 
   if ("Group" %in% names(table)) {
-    text <- "repeated-measures ANOVA"
+    model_text <- "repeated-measures ANOVA"
   } else {
-    text <- "ANOVA"
+    model_text <- "ANOVA"
   }
 
   if (inherits(x, "anova")) {
-    text_full <- text # Because anova() does not save the formula.
+    text_full <- model_text # Because anova() does not save the formula.
   } else {
     text_full <- paste0(
-      text,
+      model_text,
       " (",
       format_formula(x),
       ")"
@@ -286,7 +285,7 @@ report_model.aov <- function(x, table = NULL, ...) {
   }
 
 
-  as.report_model(text_full, summary = text)
+  as.report_model(text_full, summary = model_text)
 }
 
 #' @export
@@ -335,7 +334,7 @@ report_text.aov <- function(x, table = NULL, ...) {
     info
   )
 
-  text <- paste0(
+  result_text <- paste0(
     "The ",
     summary(model),
     " suggests that:\n\n",
@@ -343,7 +342,7 @@ report_text.aov <- function(x, table = NULL, ...) {
   )
 
 
-  as.report_text(text_full, summary = text)
+  as.report_text(text_full, summary = result_text)
 }
 
 #' @export

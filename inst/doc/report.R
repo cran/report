@@ -26,25 +26,25 @@ if (can_evaluate) {
 library(report)
 
 ## ----eval=FALSE-------------------------------------------
-#  install.packages("remotes")
-#  remotes::install_github("easystats/report") # You only need to do that once
+# install.packages("remotes")
+# remotes::install_github("easystats/report") # You only need to do that once
 
 ## ----eval=FALSE-------------------------------------------
-#  library("report") # Load the package every time you start R
+# library("report") # Load the package every time you start R
 
 ## ---------------------------------------------------------
 report(iris)
 
 ## ---------------------------------------------------------
-iris %>%
-  group_by(Species) %>%
+iris |>
+  group_by(Species) |>
   report_table()
 
 ## ---------------------------------------------------------
 report(t.test(formula = mtcars$wt ~ mtcars$am))
 
 ## ----eval=FALSE-------------------------------------------
-#  report(cor.test(mtcars$mpg, mtcars$wt))
+# report(cor.test(mtcars$mpg, mtcars$wt))
 
 ## ---------------------------------------------------------
 model <- lm(wt ~ am + mpg, data = mtcars)

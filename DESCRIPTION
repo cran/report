@@ -1,7 +1,7 @@
 Package: report
 Type: Package
 Title: Automated Reporting of Results and Statistical Models
-Version: 0.6.1
+Version: 0.6.2
 Authors@R: 
     c(person(given = "Dominique",
              family = "Makowski",
@@ -53,17 +53,17 @@ License: MIT + file LICENSE
 URL: https://easystats.github.io/report/
 BugReports: https://github.com/easystats/report/issues
 Depends: R (>= 3.6)
-Imports: bayestestR (>= 0.15.0), effectsize (>= 1.0.0), insight (>=
-        1.0.1), parameters (>= 0.24.1), performance (>= 0.13.0),
-        datawizard (>= 1.0.0), stats, tools, utils
-Suggests: BayesFactor, brms, collapse, ivreg, knitr, lavaan, lme4,
-        dplyr, Formula, rmarkdown, rstanarm, survival, modelbased (>=
-        0.9.0), emmeans, marginaleffects (>= 0.25.0), RcppEigen, BH,
-        testthat (>= 3.2.1)
+Imports: bayestestR (>= 0.17.0), effectsize (>= 1.0.1), insight (>=
+        1.4.1), parameters (>= 0.28.1), performance (>= 0.15.1),
+        datawizard (>= 1.2.0), stats, tools, utils
+Suggests: BayesFactor, brms, collapse, GLMMadaptive, glmmTMB, ivreg,
+        knitr, lavaan, lme4, loo, nlme, dplyr, Formula, rmarkdown,
+        rstanarm, survival, modelbased (>= 0.9.0), emmeans,
+        marginaleffects (>= 0.25.0), RcppEigen, BH, testthat (>= 3.2.1)
 VignetteBuilder: knitr
 Encoding: UTF-8
 Language: en-US
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Config/testthat/edition: 3
 Config/Needs/website: rstudio/bslib, r-lib/pkgdown,
         easystats/easystatstemplate
@@ -91,14 +91,18 @@ Collate: 'cite_easystats.R' 'format_algorithm.R' 'format_citation.R'
         'report_table.R' 'utils_error_message.R' 'utils_grouped_df.R'
         'utils_misspelled_variables.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2025-02-07 01:08:17 UTC; coding
-Author: Dominique Makowski [aut] (<https://orcid.org/0000-0001-5375-9967>),
-  Daniel Lüdecke [aut] (<https://orcid.org/0000-0002-8895-3206>),
-  Indrajeet Patil [aut] (<https://orcid.org/0000-0003-1995-6531>),
-  Rémi Thériault [aut, cre] (<https://orcid.org/0000-0003-4315-6788>),
-  Mattan S. Ben-Shachar [aut] (<https://orcid.org/0000-0002-4287-4801>),
-  Brenton M. Wiernik [aut] (<https://orcid.org/0000-0001-9560-6336>),
-  Rudolf Siegel [ctb] (<https://orcid.org/0000-0002-6021-804X>),
-  Camden Bock [ctb] (<https://orcid.org/0000-0002-3907-7748>)
+Packaged: 2025-11-02 23:27:24 UTC; there
+Author: Dominique Makowski [aut] (ORCID:
+    <https://orcid.org/0000-0001-5375-9967>),
+  Daniel Lüdecke [aut] (ORCID: <https://orcid.org/0000-0002-8895-3206>),
+  Indrajeet Patil [aut] (ORCID: <https://orcid.org/0000-0003-1995-6531>),
+  Rémi Thériault [aut, cre] (ORCID:
+    <https://orcid.org/0000-0003-4315-6788>),
+  Mattan S. Ben-Shachar [aut] (ORCID:
+    <https://orcid.org/0000-0002-4287-4801>),
+  Brenton M. Wiernik [aut] (ORCID:
+    <https://orcid.org/0000-0001-9560-6336>),
+  Rudolf Siegel [ctb] (ORCID: <https://orcid.org/0000-0002-6021-804X>),
+  Camden Bock [ctb] (ORCID: <https://orcid.org/0000-0002-3907-7748>)
 Repository: CRAN
-Date/Publication: 2025-02-07 08:10:02 UTC
+Date/Publication: 2025-11-03 06:10:08 UTC
