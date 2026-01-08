@@ -1,7 +1,7 @@
 Package: report
 Type: Package
 Title: Automated Reporting of Results and Statistical Models
-Version: 0.6.2
+Version: 0.6.3
 Authors@R: 
     c(person(given = "Dominique",
              family = "Makowski",
@@ -91,7 +91,7 @@ Collate: 'cite_easystats.R' 'format_algorithm.R' 'format_citation.R'
         'report_table.R' 'utils_error_message.R' 'utils_grouped_df.R'
         'utils_misspelled_variables.R' 'zzz.R'
 NeedsCompilation: no
-Packaged: 2025-11-02 23:27:24 UTC; there
+Packaged: 2026-01-06 21:57:31 UTC; rt3105
 Author: Dominique Makowski [aut] (ORCID:
     <https://orcid.org/0000-0001-5375-9967>),
   Daniel Lüdecke [aut] (ORCID: <https://orcid.org/0000-0002-8895-3206>),
@@ -105,4 +105,4 @@ Author: Dominique Makowski [aut] (ORCID:
   Rudolf Siegel [ctb] (ORCID: <https://orcid.org/0000-0002-6021-804X>),
   Camden Bock [ctb] (ORCID: <https://orcid.org/0000-0002-3907-7748>)
 Repository: CRAN
-Date/Publication: 2025-11-03 06:10:08 UTC
+Date/Publication: 2026-01-08 06:10:02 UTC
